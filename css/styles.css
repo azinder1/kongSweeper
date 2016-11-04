@@ -13,3 +13,7 @@
 .coordinateHighlight {
   background-color: yellow;
 }
+
+.hasMine {
+	background-color: black;
+}
