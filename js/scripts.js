@@ -63,10 +63,13 @@ Board.prototype.updateUI = function() {
     $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
-      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'</div>');
+      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'<img class = "gridSquare" src="img/square.png" alt="square" />'+'</div>');
         // if (this.grid[row][column]) {
         //   $("#"+row.toString()+column.toString()).toggleClass("hasMine");
         // }
+        $('img').click(function() {
+          $(this).hide();
+        })
       $(squareCoordinateID).click(function() {
         // $(this).toggleClass("coordinateHighlight");
         gameBoard.pushAdjacents(squareCoordinateID.slice(1, squareCoordinateID.length).split("-"));
