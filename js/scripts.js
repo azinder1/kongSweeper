@@ -78,6 +78,7 @@ Board.prototype.updateUI = function() {
 }
 
 Board.prototype.pushAdjacents = function(coordinates) {
+  console.log(coordinates);
   var x = parseInt(coordinates[1]);
   var y = parseInt(coordinates[0]);
   up = [x, (y - 1)];
@@ -87,6 +88,7 @@ Board.prototype.pushAdjacents = function(coordinates) {
 
   if (this.isInBounds(up) === true && this.isNotBomb(up) === true) {
     if (this.checked.indexOf(up.toString()) === -1) {
+      console.log(up);
       this.adjacentBlanks.push(up);
     }
   }
@@ -136,7 +138,7 @@ Board.prototype.isInBounds = function(coordinates) {
 }
 
 Board.prototype.clearArray = function() {
-  this.grid.length = 0;
+  //this.grid.length = 0;
   this.adjacentBlanks.length = 0;
   this.checked.length = 0;
 }
@@ -150,7 +152,7 @@ $(function() {
     var gridWidth = parseInt($("#gridDimension").val());
 
     gameBoard.gridWidth = gridWidth;
-    gameBoard.minesRemaining = gridWidth;
+    gameBoard.minesRemaining = Math.floor(gridWidth * 4);
     gameBoard.resetGrid();
     gameBoard.placeMines();
     gameBoard.setMineWarnings();
