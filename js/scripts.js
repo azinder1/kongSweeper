@@ -62,7 +62,6 @@ Board.prototype.updateUI = function() {
   for (row = 0; row < this.gridWidth; row++) {
     $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
-<<<<<<< HEAD
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
       $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'<img class = "gridSquare" src="img/square.png" alt="square" />'+'</div>');
         // if (this.grid[row][column]) {
@@ -72,7 +71,6 @@ Board.prototype.updateUI = function() {
           $(this).hide();
         })
       $(squareCoordinateID).click(function() {
->>>>>>> 58cb830423c47cc73fc26b211c930387f48d8c00
         // $(this).toggleClass("coordinateHighlight");
         var squareCoordinateID = this.id.split("-");
         console.log(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]);
