@@ -74,16 +74,13 @@ Board.prototype.updateUI = function() {
       $(squareCoordinateID).click(function() {
         // $(this).toggleClass("coordinateHighlight");
         var squareCoordinateID = this.id.split("-");
-        console.log(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]);
         if (gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]] === "X") {
           //game over
           console.log("game over");
         } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
           //only check clicked square
           gameBoard.revealOneSquare(squareCoordinateID);
-          console.log("click non-zero");
         } else {
-          console.log("click zero");
           gameBoard.revealOneSquare(squareCoordinateID);
           gameBoard.pushAdjacents(squareCoordinateID);
           gameBoard.loopThroughBoard();
@@ -96,54 +93,90 @@ Board.prototype.updateUI = function() {
 }
 
 Board.prototype.pushAdjacents = function(coordinates) {
-  var x = parseInt(coordinates[0]);
-  var y = parseInt(coordinates[1]);
-  up = [x, (y - 1)];
-  down = [x, (y + 1)];
-  left = [(x - 1), y];
-  right = [(x + 1),y];
+  // var x = parseInt(coordinates[0]);
+  // var y = parseInt(coordinates[1]);
+  // up = [x, (y - 1)];
+  // down = [x, (y + 1)];
+  // left = [(x - 1), y];
+  // right = [(x + 1),y];
+  var row = parseInt(coordinates[0]);
+  var column = parseInt(coordinates[1]);
 
-  if (this.isInBounds(up) === true && this.isNotBomb(up) === true) {
-    if (this.checked.indexOf(up.toString()) === -1) {
-      if (this.grid[up[0]][up[1]] === 0) {
-        this.adjacentBlanks.push(up);
-        this.toBeRevealed.push(up);
-      } else if (this.grid[up[0]][up[1]] > 0) {
-        this.toBeRevealed.push(up);
-      }
-    }
-  }
-  if (this.isInBounds(down) === true && this.isNotBomb(down) === true) {
-    if (this.checked.indexOf(down.toString()) === -1) {
-      if (this.grid[down[0]][down[1]] === 0) {
-        this.adjacentBlanks.push(down);
-        this.toBeRevealed.push(down);
-      } else if (this.grid[down[0]][down[1]] > 0) {
-        this.toBeRevealed.push(down);
-      }
-    }
-  }
-  if (this.isInBounds(left) === true && this.isNotBomb(left) === true) {
-    if (this.checked.indexOf(left.toString()) === -1) {
-      if (this.grid[left[0]][left[1]] === 0) {
-        this.adjacentBlanks.push(left);
-        this.toBeRevealed.push(left);
-      } else if (this.grid[left[0]][left[1]] > 0) {
-        this.toBeRevealed.push(left);
-      }
-    }
-  }
-  if (this.isInBounds(right) === true && this.isNotBomb(right) === true) {
-    if (this.checked.indexOf(right.toString()) === -1) {
-      if (this.grid[right[0]][right[1]] === 0) {
-        this.adjacentBlanks.push(right);
-        this.toBeRevealed.push(right);
-      } else if (this.grid[right[0]][right[1]] > 0) {
-        this.toBeRevealed.push(right);
+  for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
+    for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
+      var newCoordinates = [(row + rowAdjust), (column + columnAdjust)];
+      if ((row+rowAdjust >= 0) && (row+rowAdjust <= this.gridWidth-1) && (column+columnAdjust >= 0) && (column+columnAdjust <= this.gridWidth-1)) {
+        if (this.grid[row+rowAdjust][column+columnAdjust] != "X") {
+          if (this.grid[newCoordinates[0]][newCoordinates[1]] === 0) {
+            this.adjacentBlanks.push(newCoordinates);
+            this.toBeRevealed.push(newCoordinates);
+          } else if (this.grid[newCoordinates[0]][newCoordinates[1]] > 0) {
+            this.toBeRevealed.push(newCoordinates);
+          }
+        }
       }
     }
   }
 }
+
+//   for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
+//     for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
+//       var newCoordinates = [(row + rowAdjust), (column + columnAdjust)];
+//       if (this.isInBounds(newCoordinates) === true && this.isNotBomb(newCoordinates) === true) {
+//         if (this.checked.indexOf(newCoordinates.toString()) === -1) {
+//           if (this.grid[newCoordinates[0]][newCoordinates[1]] === 0) {
+//             this.adjacentBlanks.push(newCoordinates);
+//             this.toBeRevealed.push(newCoordinates);
+//           } else if (this.grid[newCoordinates[0]][newCoordinates[1]] > 0) {
+//             this.toBeRevealed.push(newCoordinates);
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+  // }
+  //
+  // if (this.isInBounds(up) === true && this.isNotBomb(up) === true) {
+  //   if (this.checked.indexOf(up.toString()) === -1) {
+  //     if (this.grid[up[0]][up[1]] === 0) {
+  //       this.adjacentBlanks.push(up);
+  //       this.toBeRevealed.push(up);
+  //     } else if (this.grid[up[0]][up[1]] > 0) {
+  //       this.toBeRevealed.push(up);
+  //     }
+  //   }
+  // }
+  // if (this.isInBounds(down) === true && this.isNotBomb(down) === true) {
+  //   if (this.checked.indexOf(down.toString()) === -1) {
+  //     if (this.grid[down[0]][down[1]] === 0) {
+  //       this.adjacentBlanks.push(down);
+  //       this.toBeRevealed.push(down);
+  //     } else if (this.grid[down[0]][down[1]] > 0) {
+  //       this.toBeRevealed.push(down);
+  //     }
+  //   }
+  // }
+  // if (this.isInBounds(left) === true && this.isNotBomb(left) === true) {
+  //   if (this.checked.indexOf(left.toString()) === -1) {
+  //     if (this.grid[left[0]][left[1]] === 0) {
+  //       this.adjacentBlanks.push(left);
+  //       this.toBeRevealed.push(left);
+  //     } else if (this.grid[left[0]][left[1]] > 0) {
+  //       this.toBeRevealed.push(left);
+  //     }
+  //   }
+  // }
+  // if (this.isInBounds(right) === true && this.isNotBomb(right) === true) {
+  //   if (this.checked.indexOf(right.toString()) === -1) {
+  //     if (this.grid[right[0]][right[1]] === 0) {
+  //       this.adjacentBlanks.push(right);
+  //       this.toBeRevealed.push(right);
+  //     } else if (this.grid[right[0]][right[1]] > 0) {
+  //       this.toBeRevealed.push(right);
+  //     }
+  //   }
+  // }
 
 Board.prototype.loopThroughBoard = function() {
   for (var i = 0; i < this.adjacentBlanks.length; i++) {
@@ -158,7 +191,6 @@ Board.prototype.loopThroughBoard = function() {
 
 Board.prototype.revealSquares = function() {
   for (square = 0; square < this.toBeRevealed.length; square++) {
-    console.log(this.toBeRevealed[square]);
     // $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).addClass("coordinateHighlight");
     $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).find("img").hide();
   }
@@ -201,11 +233,10 @@ $(function() {
     var gridWidth = parseInt($("#gridDimension").val());
 
     gameBoard.gridWidth = gridWidth;
-    gameBoard.minesRemaining = Math.floor(gridWidth * 4);
+    gameBoard.minesRemaining = Math.floor(gridWidth * 2);
     gameBoard.resetGrid();
     gameBoard.placeMines();
     gameBoard.setMineWarnings();
     gameBoard.updateUI();
-
   });
 })
