@@ -1,4 +1,4 @@
-
+//Back end logic
 function Board() {
   this.grid = [];
   this.adjacentBlanks = [];
@@ -60,25 +60,41 @@ Board.prototype.updateUI = function() {
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
       $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'<img class = "gridSquare" src="img/square.png" alt="square" />'+'</div>');
-        $('img').click(function() {
-          $(this).hide();
-        })
+        // $('img').click(function() {
+        //   $(this).hide();
+        // })
       $(squareCoordinateID).click(function() {
-        var squareCoordinateID = this.id.split("-");
-        if (gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]] === "X") {
-          //game over
-          console.log("game over");
-        } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
-          //only check clicked square
-          gameBoard.revealOneSquare(squareCoordinateID);
-        } else {
-          gameBoard.revealOneSquare(squareCoordinateID);
-          gameBoard.pushAdjacents(squareCoordinateID);
-          gameBoard.loopThroughBoard();
-          gameBoard.revealSquares();
-          gameBoard.clearArray();
+        if (!gameBoard.gameOver) {
+          console.log("function runs");
+          var squareCoordinateID = this.id.split("-");
+          if (gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]] === "X") {
+            //game over
+            gameBoard.revealOneSquare(squareCoordinateID);
+            gameBoard.gameOver = true;
+            gameBoard.revealAllBombs();
+            console.log("game over");
+          } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
+            //only check clicked square
+            gameBoard.revealOneSquare(squareCoordinateID);
+          } else {
+            gameBoard.revealOneSquare(squareCoordinateID);
+            gameBoard.pushAdjacents(squareCoordinateID);
+            gameBoard.loopThroughBoard();
+            gameBoard.revealSquares();
+            gameBoard.clearArray();
+          }
         }
       })
+    }
+  }
+}
+
+Board.prototype.revealAllBombs = function() {
+  for (row = 0; row < this.gridWidth; row++) {
+    for (column = 0; column < this.gridWidth; column++) {
+      if (this.grid[row][column] === "X") {
+        $("#" + row + "-" + column).find("img").hide();
+      }
     }
   }
 }
