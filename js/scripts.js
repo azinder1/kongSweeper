@@ -6,6 +6,7 @@ function Board() {
   this.toBeRevealed = [];
   this.minesRemaining;
   this.gridWidth;
+  this.gameOver = false;
 }
 
 Board.prototype.placeMines = function() {
@@ -25,19 +26,13 @@ Board.prototype.placeMines = function() {
 
 //add mine warning numbers to grid
 Board.prototype.setMineWarnings = function() {
-  //loop through grid
   for (row = 0; row < this.gridWidth; row++) {
     for (column = 0; column < this.gridWidth; column++) {
-      //check for mine at that location
       if (this.grid[row][column] === "X") {
-        //loop through adjacent squares
         for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
           for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
-            //test to make sure the selected square is within the grid
             if ((row+rowAdjust >= 0) && (row+rowAdjust <= this.gridWidth-1) && (column+columnAdjust >= 0) && (column+columnAdjust <= this.gridWidth-1)) {
-              //test to make sure the selected square doesn't also contain a mine
               if (this.grid[row+rowAdjust][column+columnAdjust] != "X") {
-                //increment selected square by one
                 this.grid[row+rowAdjust][column+columnAdjust] += 1;
               }
             }
@@ -65,14 +60,10 @@ Board.prototype.updateUI = function() {
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
       $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'<img class = "gridSquare" src="img/square.png" alt="square" />'+'</div>');
-        // if (this.grid[row][column]) {
-        //   $("#"+row.toString()+column.toString()).toggleClass("hasMine");
-        // }
         $('img').click(function() {
           $(this).hide();
         })
       $(squareCoordinateID).click(function() {
-        // $(this).toggleClass("coordinateHighlight");
         var squareCoordinateID = this.id.split("-");
         if (gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]] === "X") {
           //game over
@@ -93,12 +84,6 @@ Board.prototype.updateUI = function() {
 }
 
 Board.prototype.pushAdjacents = function(coordinates) {
-  // var x = parseInt(coordinates[0]);
-  // var y = parseInt(coordinates[1]);
-  // up = [x, (y - 1)];
-  // down = [x, (y + 1)];
-  // left = [(x - 1), y];
-  // right = [(x + 1),y];
   var row = parseInt(coordinates[0]);
   var column = parseInt(coordinates[1]);
 
@@ -119,71 +104,11 @@ Board.prototype.pushAdjacents = function(coordinates) {
   }
 }
 
-//   for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
-//     for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
-//       var newCoordinates = [(row + rowAdjust), (column + columnAdjust)];
-//       if (this.isInBounds(newCoordinates) === true && this.isNotBomb(newCoordinates) === true) {
-//         if (this.checked.indexOf(newCoordinates.toString()) === -1) {
-//           if (this.grid[newCoordinates[0]][newCoordinates[1]] === 0) {
-//             this.adjacentBlanks.push(newCoordinates);
-//             this.toBeRevealed.push(newCoordinates);
-//           } else if (this.grid[newCoordinates[0]][newCoordinates[1]] > 0) {
-//             this.toBeRevealed.push(newCoordinates);
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-  // }
-  //
-  // if (this.isInBounds(up) === true && this.isNotBomb(up) === true) {
-  //   if (this.checked.indexOf(up.toString()) === -1) {
-  //     if (this.grid[up[0]][up[1]] === 0) {
-  //       this.adjacentBlanks.push(up);
-  //       this.toBeRevealed.push(up);
-  //     } else if (this.grid[up[0]][up[1]] > 0) {
-  //       this.toBeRevealed.push(up);
-  //     }
-  //   }
-  // }
-  // if (this.isInBounds(down) === true && this.isNotBomb(down) === true) {
-  //   if (this.checked.indexOf(down.toString()) === -1) {
-  //     if (this.grid[down[0]][down[1]] === 0) {
-  //       this.adjacentBlanks.push(down);
-  //       this.toBeRevealed.push(down);
-  //     } else if (this.grid[down[0]][down[1]] > 0) {
-  //       this.toBeRevealed.push(down);
-  //     }
-  //   }
-  // }
-  // if (this.isInBounds(left) === true && this.isNotBomb(left) === true) {
-  //   if (this.checked.indexOf(left.toString()) === -1) {
-  //     if (this.grid[left[0]][left[1]] === 0) {
-  //       this.adjacentBlanks.push(left);
-  //       this.toBeRevealed.push(left);
-  //     } else if (this.grid[left[0]][left[1]] > 0) {
-  //       this.toBeRevealed.push(left);
-  //     }
-  //   }
-  // }
-  // if (this.isInBounds(right) === true && this.isNotBomb(right) === true) {
-  //   if (this.checked.indexOf(right.toString()) === -1) {
-  //     if (this.grid[right[0]][right[1]] === 0) {
-  //       this.adjacentBlanks.push(right);
-  //       this.toBeRevealed.push(right);
-  //     } else if (this.grid[right[0]][right[1]] > 0) {
-  //       this.toBeRevealed.push(right);
-  //     }
-  //   }
-  // }
-
 Board.prototype.loopThroughBoard = function() {
   for (var i = 0; i < this.adjacentBlanks.length; i++) {
     if (this.checked.indexOf(this.adjacentBlanks[i].toString()) === -1) {
       this.checked.push(this.adjacentBlanks[i].toString());
       var coordinates = this.adjacentBlanks[i][0].toString() + "-" + this.adjacentBlanks[i][1].toString();
-      // $("#" + coordinates).toggleClass("coordinateHighlight");
       this.pushAdjacents(coordinates.split("-"));
     }
   }
@@ -191,31 +116,12 @@ Board.prototype.loopThroughBoard = function() {
 
 Board.prototype.revealSquares = function() {
   for (square = 0; square < this.toBeRevealed.length; square++) {
-    // $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).addClass("coordinateHighlight");
     $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).find("img").hide();
   }
 }
 
 Board.prototype.revealOneSquare = function(coordinates) {
-  // $("#" + coordinates[0] + "-" + coordinates[1]).addClass("coordinateHighlight");
   $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
-}
-
-Board.prototype.isNotBomb = function(coordinates) {
-  if (this.grid[coordinates[0]][coordinates[1]] != "X") {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-Board.prototype.isInBounds = function(coordinates) {
-  if (coordinates[0] >= 0 && coordinates[0] < this.gridWidth &&
-      coordinates[1] >= 0 && coordinates[1] < this.gridWidth) {
-    return true;
-  } else {
-    return false;
-  }
 }
 
 Board.prototype.clearArray = function() {
