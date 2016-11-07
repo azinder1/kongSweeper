@@ -3,6 +3,7 @@ function Board() {
   this.grid = [];
   this.adjacentBlanks = [];
   this.checked =  [];
+  this.toBeRevealed = [];
   this.minesRemaining;
   this.gridWidth;
 }
@@ -79,11 +80,14 @@ Board.prototype.updateUI = function() {
           console.log("game over");
         } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
           //only check clicked square
+          gameBoard.revealOneSquare(squareCoordinateID);
           console.log("click non-zero");
         } else {
           console.log("click zero");
+          gameBoard.revealOneSquare(squareCoordinateID);
           gameBoard.pushAdjacents(squareCoordinateID);
           gameBoard.loopThroughBoard();
+          gameBoard.revealSquares();
           gameBoard.clearArray();
         }
       })
@@ -101,22 +105,42 @@ Board.prototype.pushAdjacents = function(coordinates) {
 
   if (this.isInBounds(up) === true && this.isNotBomb(up) === true) {
     if (this.checked.indexOf(up.toString()) === -1) {
-      this.adjacentBlanks.push(up);
+      if (this.grid[up[0]][up[1]] === 0) {
+        this.adjacentBlanks.push(up);
+        this.toBeRevealed.push(up);
+      } else if (this.grid[up[0]][up[1]] > 0) {
+        this.toBeRevealed.push(up);
+      }
     }
   }
   if (this.isInBounds(down) === true && this.isNotBomb(down) === true) {
     if (this.checked.indexOf(down.toString()) === -1) {
-      this.adjacentBlanks.push(down);
+      if (this.grid[down[0]][down[1]] === 0) {
+        this.adjacentBlanks.push(down);
+        this.toBeRevealed.push(down);
+      } else if (this.grid[down[0]][down[1]] > 0) {
+        this.toBeRevealed.push(down);
+      }
     }
   }
   if (this.isInBounds(left) === true && this.isNotBomb(left) === true) {
     if (this.checked.indexOf(left.toString()) === -1) {
-      this.adjacentBlanks.push(left);
+      if (this.grid[left[0]][left[1]] === 0) {
+        this.adjacentBlanks.push(left);
+        this.toBeRevealed.push(left);
+      } else if (this.grid[left[0]][left[1]] > 0) {
+        this.toBeRevealed.push(left);
+      }
     }
   }
   if (this.isInBounds(right) === true && this.isNotBomb(right) === true) {
     if (this.checked.indexOf(right.toString()) === -1) {
-      this.adjacentBlanks.push(right);
+      if (this.grid[right[0]][right[1]] === 0) {
+        this.adjacentBlanks.push(right);
+        this.toBeRevealed.push(right);
+      } else if (this.grid[right[0]][right[1]] > 0) {
+        this.toBeRevealed.push(right);
+      }
     }
   }
 }
@@ -126,10 +150,21 @@ Board.prototype.loopThroughBoard = function() {
     if (this.checked.indexOf(this.adjacentBlanks[i].toString()) === -1) {
       this.checked.push(this.adjacentBlanks[i].toString());
       var coordinates = this.adjacentBlanks[i][0].toString() + "-" + this.adjacentBlanks[i][1].toString();
-      $("#" + coordinates).toggleClass("coordinateHighlight");
+      // $("#" + coordinates).toggleClass("coordinateHighlight");
       this.pushAdjacents(coordinates.split("-"));
     }
   }
+}
+
+Board.prototype.revealSquares = function() {
+  for (square = 0; square < this.toBeRevealed.length; square++) {
+    console.log(this.toBeRevealed[square]);
+    $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).addClass("coordinateHighlight");
+  }
+}
+
+Board.prototype.revealOneSquare = function(coordinates) {
+  $("#" + coordinates[0] + "-" + coordinates[1]).addClass("coordinateHighlight");
 }
 
 Board.prototype.isNotBomb = function(coordinates) {
@@ -152,6 +187,7 @@ Board.prototype.isInBounds = function(coordinates) {
 Board.prototype.clearArray = function() {
   this.adjacentBlanks.length = 0;
   this.checked.length = 0;
+  this.toBeRevealed.length = 0;
 }
 
 
