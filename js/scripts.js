@@ -159,12 +159,14 @@ Board.prototype.loopThroughBoard = function() {
 Board.prototype.revealSquares = function() {
   for (square = 0; square < this.toBeRevealed.length; square++) {
     console.log(this.toBeRevealed[square]);
-    $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).addClass("coordinateHighlight");
+    // $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).addClass("coordinateHighlight");
+    $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).find("img").hide();
   }
 }
 
 Board.prototype.revealOneSquare = function(coordinates) {
-  $("#" + coordinates[0] + "-" + coordinates[1]).addClass("coordinateHighlight");
+  // $("#" + coordinates[0] + "-" + coordinates[1]).addClass("coordinateHighlight");
+  $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
 }
 
 Board.prototype.isNotBomb = function(coordinates) {
