@@ -55,6 +55,8 @@ Board.prototype.resetGrid = function() {
       this.grid[row].push(0);
     }
   }
+  clearArray(adjacentBlanks);
+  clearArray(checked);
 }
 
 Board.prototype.updateUI = function() {
@@ -67,16 +69,103 @@ Board.prototype.updateUI = function() {
           $("#"+row.toString()+column.toString()).toggleClass("hasMine");
         }
       $("#" + row.toString() + column.toString()).click(function() {
-        $(this).toggleClass("coordinateHighlight");
+        // $(this).toggleClass("coordinateHighlight");
+        pushAdjacents(this.id);
+        loopThroughBoard();
+        clearArray(checked);
       })
     }
   }
 }
 
+var adjacentBlanks = [];
+var adjacentSquares = [];
+var checked =  [];
 
+function pushAdjacents(coordinates) {
+  var x = getX(coordinates);
+  var y = getY(coordinates);
+  up = [(x - 1), y]
+  down = [(x + 1), y]
+  left = [x, (y - 1)]
+  right = [x, (y + 1)]
+
+  if (isInBounds(up) === true && isNotMine(up) === true) {
+    if (checked.indexOf("" + up) === -1) {
+      adjacentBlanks.push(up);
+    }
+  }
+  if (isInBounds(down) === true && isNotMine(down) === true) {
+    if (checked.indexOf("" + down) === -1) {
+      adjacentBlanks.push(down);
+    }
+  }
+  if (isInBounds(left) === true && isNotMine(left) === true) {
+    if (checked.indexOf("" + left) === -1) {
+      adjacentBlanks.push(left);
+    }
+  }
+  if (isInBounds(right) === true && isNotMine(right) === true) {
+    if (checked.indexOf("" + right) === -1) {
+      adjacentBlanks.push(right);
+    }
+  }
+}
+
+function loopThroughBoard() {
+  for (var i = 0; i < adjacentBlanks.length; i++) {
+    if (checked.indexOf("" + adjacentBlanks[i]) === -1) {
+      checked.push("" + adjacentBlanks[i]);
+      var coordinates = "" + adjacentBlanks[i][0] + adjacentBlanks[i][1];
+      $("#" + coordinates).toggleClass("coordinateHighlight");
+      pushAdjacents(coordinates);
+    }
+  }
+}
+
+function getX(id) {
+  var x = parseInt(id.charAt(0));
+  return x;
+}
+
+function getY(id) {
+  var y = parseInt(id.charAt(1));
+  return y;
+}
+
+function isNotMine(coordinates) {
+  if (gameBoard.grid[coordinates[0]][coordinates[1]] != "X") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isNotNumber(coordinates) {
+  if (gameBoard.grid[coordinates[0]][coordinates[1]] < 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isInBounds(coordinates) {
+  if (coordinates[0] >= 0 && coordinates[0] < gameBoard.width &&
+      coordinates[1] >= 0 && coordinates[1] < gameBoard.width) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function clearArray(array) {
+  array.length = 0;
+}
+
+var gameBoard = new Board();
 
 $(function() {
-  var gameBoard = new Board();
+
   $("form").submit(function(event) {
     event.preventDefault();
     gridWidth = parseInt($("#gridDimension").val());
