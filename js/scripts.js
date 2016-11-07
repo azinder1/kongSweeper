@@ -62,25 +62,35 @@ Board.prototype.updateUI = function() {
   for (row = 0; row < this.gridWidth; row++) {
     $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
-      var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
+      var squareCoordinateID = "#" + row.toString() + "-" + column.toString();
       $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'</div>');
         // if (this.grid[row][column]) {
         //   $("#"+row.toString()+column.toString()).toggleClass("hasMine");
         // }
-      $(squareCoordinateID).click(function() {
+      $("#" + row.toString() + "-" + column.toString()).click(function() {
         // $(this).toggleClass("coordinateHighlight");
-        gameBoard.pushAdjacents(squareCoordinateID.slice(1, squareCoordinateID.length).split("-"));
-        gameBoard.loopThroughBoard();
-        gameBoard.clearArray();
+        var squareCoordinateID = this.id.split("-");
+        console.log(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]);
+        if (gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]] === "X") {
+          //game over
+          console.log("game over");
+        } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
+          //only check clicked square
+          console.log("click non-zero");
+        } else {
+          console.log("click zero");
+          gameBoard.pushAdjacents(squareCoordinateID);
+          gameBoard.loopThroughBoard();
+          gameBoard.clearArray();
+        }
       })
     }
   }
 }
 
 Board.prototype.pushAdjacents = function(coordinates) {
-  console.log(coordinates);
-  var x = parseInt(coordinates[1]);
-  var y = parseInt(coordinates[0]);
+  var x = parseInt(coordinates[0]);
+  var y = parseInt(coordinates[1]);
   up = [x, (y - 1)];
   down = [x, (y + 1)];
   left = [(x - 1), y];
@@ -88,7 +98,6 @@ Board.prototype.pushAdjacents = function(coordinates) {
 
   if (this.isInBounds(up) === true && this.isNotBomb(up) === true) {
     if (this.checked.indexOf(up.toString()) === -1) {
-      console.log(up);
       this.adjacentBlanks.push(up);
     }
   }
@@ -138,7 +147,6 @@ Board.prototype.isInBounds = function(coordinates) {
 }
 
 Board.prototype.clearArray = function() {
-  //this.grid.length = 0;
   this.adjacentBlanks.length = 0;
   this.checked.length = 0;
 }
