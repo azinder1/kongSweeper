@@ -12,12 +12,12 @@ Board.prototype.placeMines = function() {
 
   for (row = 0; row < this.gridWidth; row++) {
     for (column = 0; column < this.gridWidth; column++) {
-      potentialLocations.push(row.toString() + column.toString());
+      potentialLocations.push(row.toString() + "-" + column.toString());
     }
   }
   for (mine = 0; mine < this.minesRemaining; mine++) {
     var locationIndex = Math.floor(Math.random() * potentialLocations.length);
-    var randomMine = potentialLocations[locationIndex];
+    var randomMine = potentialLocations[locationIndex].split("-");
     this.grid[randomMine[0]][randomMine[1]] = "X";
   }
 }
@@ -137,6 +137,8 @@ Board.prototype.isInBounds = function(coordinates) {
 
 Board.prototype.clearArray = function() {
   this.grid.length = 0;
+  this.adjacentBlanks.length = 0;
+  this.checked.length = 0;
 }
 
 
