@@ -50,7 +50,7 @@ Board.prototype.setMineWarnings = function() {
 }
 
 Board.prototype.resetGrid = function() {
-  this.clearArray();
+  this.grid.length = 0;
   for (row = 0; row < this.gridWidth; row++) {
     this.grid.push([]);
     for (column = 0; column < this.gridWidth; column++) {
