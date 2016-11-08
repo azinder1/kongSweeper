@@ -76,37 +76,46 @@ Board.prototype.updateUI = function() {
     $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
-      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img class = "gridSquare" src="img/mineBlankRed.png" alt="square" /></div>');
-      $(squareCoordinateID).click(function() {
+      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img oncontextmenu="return false;" class = "gridSquare" src="img/mineBlankRed.png" alt="square" /></div>');
+      // $(squareCoordinateID).click(function() {
+      $(squareCoordinateID).mousedown(function(event) {
         var squareCoordinateID = this.id.split("-");
         var clickedSquareObject = gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]];
-
-        //if user is clearing mines
-        if (!gameBoard.gameOver && !gameBoard.userFlagSelect) {
-          //game over
-          if (clickedSquareObject.hasBomb) {
-            gameBoard.revealOneSquare(clickedSquareObject);
-            gameBoard.gameOver = true;
-            gameBoard.revealAllBombs();
-            console.log("game over");
-            //only check clicked square
-          } else if (clickedSquareObject.value > 0) {
-            gameBoard.revealOneSquare(clickedSquareObject);
-            gameBoard.checkForVictory();
-            //run loop to find all connected blank squares
-          } else {
-            gameBoard.revealOneSquare(clickedSquareObject);
-            gameBoard.pushAdjacents(clickedSquareObject.coordinates);
-            gameBoard.loopThroughBoard();
-            gameBoard.revealSquares();
-            gameBoard.clearArray();
+        switch (event.which) {
+          case 1:
+          //if user is clearing mines
+          if (!gameBoard.gameOver && !gameBoard.userFlagSelect) {
+            //game over
+            if (clickedSquareObject.hasBomb) {
+              gameBoard.revealOneSquare(clickedSquareObject);
+              gameBoard.gameOver = true;
+              gameBoard.revealAllBombs();
+              console.log("game over");
+              //only check clicked square
+            } else if (clickedSquareObject.value > 0) {
+              gameBoard.revealOneSquare(clickedSquareObject);
+              gameBoard.checkForVictory();
+              //run loop to find all connected blank squares
+            } else {
+              gameBoard.revealOneSquare(clickedSquareObject);
+              gameBoard.pushAdjacents(clickedSquareObject.coordinates);
+              gameBoard.loopThroughBoard();
+              gameBoard.revealSquares();
+              gameBoard.clearArray();
+            }
+              //if user is placing flags
           }
-
-            //if user is placing flags
-        } else if (!gameBoard.gameOver && gameBoard.userFlagSelect) {
-          gameBoard.placeFlag(clickedSquareObject);
+            break;
+          case 3:
+            if (!gameBoard.gameOver) {
+              gameBoard.placeFlag(clickedSquareObject);
+              console.log("Right click flag placed");
+            }
+            break;
+          default:
+            break;
         }
-      });
+      })
     }
   }
 }
@@ -228,7 +237,7 @@ $(function() {
     var gridWidth = parseInt($("#gridDimension").val());
 
     gameBoard.gridWidth = gridWidth;
-    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * 0.1);
+    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * 0.2);
     gameBoard.squaresRemaining = gridWidth*gridWidth;
     gameBoard.flagsRemaining = gameBoard.bombsRemaining;
     gameBoard.resetGrid();
