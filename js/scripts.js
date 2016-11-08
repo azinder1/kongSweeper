@@ -5,8 +5,10 @@ function Board() {
   this.checked =  [];
   this.toBeRevealed = [];
   this.minesRemaining;
+  this.squaresRemaining;
   this.gridWidth;
   this.gameOver = false;
+  this.revealedSquares=[];
 }
 
 Board.prototype.placeMines = function() {
@@ -20,7 +22,11 @@ Board.prototype.placeMines = function() {
   for (mine = 0; mine < this.minesRemaining; mine++) {
     var locationIndex = Math.floor(Math.random() * potentialLocations.length);
     var randomMine = potentialLocations[locationIndex].split("-");
-    this.grid[randomMine[0]][randomMine[1]] = "X";
+    if (this.grid[randomMine[0]][randomMine[1]] === "X") {
+      mine--;
+    } else {
+      this.grid[randomMine[0]][randomMine[1]] = "X";
+    }
   }
 }
 
@@ -60,22 +66,20 @@ Board.prototype.updateUI = function() {
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
       $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'<img class = "gridSquare" src="img/square.png" alt="square" />'+'</div>');
-        // $('img').click(function() {
-        //   $(this).hide();
-        // })
       $(squareCoordinateID).click(function() {
         if (!gameBoard.gameOver) {
-          console.log("function runs");
           var squareCoordinateID = this.id.split("-");
+          //game over
           if (gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]] === "X") {
-            //game over
             gameBoard.revealOneSquare(squareCoordinateID);
             gameBoard.gameOver = true;
             gameBoard.revealAllBombs();
             console.log("game over");
-          } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
             //only check clicked square
+          } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
             gameBoard.revealOneSquare(squareCoordinateID);
+            gameBoard.checkForVictory();
+            //run loop to find all connected blank squares
           } else {
             gameBoard.revealOneSquare(squareCoordinateID);
             gameBoard.pushAdjacents(squareCoordinateID);
@@ -132,12 +136,22 @@ Board.prototype.loopThroughBoard = function() {
 
 Board.prototype.revealSquares = function() {
   for (square = 0; square < this.toBeRevealed.length; square++) {
+    var squareString = this.toBeRevealed[square].join("-");
+    if(this.revealedSquares.indexOf(squareString) === -1) {
+      this.revealedSquares.push(squareString);
+      this.squaresRemaining--;
+    }
     $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).find("img").hide();
+    this.checkForVictory();
   }
 }
 
 Board.prototype.revealOneSquare = function(coordinates) {
   $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
+  if (this.revealedSquares.indexOf(coordinates.join("-")) === -1) {
+    this.revealedSquares.push(coordinates.join("-"));
+    this.squaresRemaining--;
+  }
 }
 
 Board.prototype.clearArray = function() {
@@ -146,6 +160,13 @@ Board.prototype.clearArray = function() {
   this.toBeRevealed.length = 0;
 }
 
+Board.prototype.checkForVictory = function() {
+  // this.squaresRemaining--;
+  if (this.squaresRemaining === this.minesRemaining){
+    this.gameOver = true;
+    console.log("victory");
+  }
+}
 
 var gameBoard = new Board();
 $(function() {
@@ -155,7 +176,8 @@ $(function() {
     var gridWidth = parseInt($("#gridDimension").val());
 
     gameBoard.gridWidth = gridWidth;
-    gameBoard.minesRemaining = Math.floor(gridWidth * 2);
+    gameBoard.minesRemaining = Math.floor(gridWidth * 1);
+    gameBoard.squaresRemaining = gridWidth*gridWidth;
     gameBoard.resetGrid();
     gameBoard.placeMines();
     gameBoard.setMineWarnings();
