@@ -86,22 +86,24 @@ Board.prototype.updateUI = function() {
           //if user is clearing mines
           if (!gameBoard.gameOver && !gameBoard.userFlagSelect) {
             //game over
-            if (clickedSquareObject.hasBomb) {
+            if (clickedSquareObject.hasFlag) {
+              if (clickedSquareObject.hasBomb) {
               gameBoard.revealOneSquare(clickedSquareObject);
               gameBoard.gameOver = true;
               gameBoard.revealAllBombs();
               console.log("game over");
               //only check clicked square
-            } else if (clickedSquareObject.value > 0) {
-              gameBoard.revealOneSquare(clickedSquareObject);
-              gameBoard.checkForVictory();
-              //run loop to find all connected blank squares
-            } else {
-              gameBoard.revealOneSquare(clickedSquareObject);
-              gameBoard.pushAdjacents(clickedSquareObject.coordinates);
-              gameBoard.loopThroughBoard();
-              gameBoard.revealSquares();
-              gameBoard.clearArray();
+              } else if (clickedSquareObject.value > 0) {
+                gameBoard.revealOneSquare(clickedSquareObject);
+                gameBoard.checkForVictory();
+                //run loop to find all connected blank squares
+              } else {
+                gameBoard.revealOneSquare(clickedSquareObject);
+                gameBoard.pushAdjacents(clickedSquareObject.coordinates);
+                gameBoard.loopThroughBoard();
+                gameBoard.revealSquares();
+                gameBoard.clearArray();
+              }
             }
               //if user is placing flags
           }
