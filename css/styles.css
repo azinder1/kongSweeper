@@ -17,20 +17,15 @@ body {
   text-align: center;
 }
 
-
-.myButton {
-  margin: 10px;
-  width: 60px;
-  /*display: none;*/
-}
-
 .centerstuff {
   display: table;
   margin-left: auto;
   margin-right: auto;
   /*border-top: 3px solid black;*/
 }
-
+ .grid {
+   margin-bottom:100px;
+ }
 .height_min {
   height: 30px;
 }
