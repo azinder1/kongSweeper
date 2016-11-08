@@ -115,12 +115,14 @@ Board.prototype.placeFlag = function(coordinates) {
     this.squaresRemaining++;
     this.flagsRemaining++;
     $("#" + coordinates[0] + "-" + coordinates[1]).removeClass("flagged");
+    $("#" + coordinates[0] + "-" + coordinates[1]).find("img").attr("src", "img/mineBlankRed.png");
     console.log("remove flag");
   } else if (!($("#" + coordinates[0] + "-" + coordinates[1]).hasClass("flagged"))) {
     this.bombsRemaining--;
     this.squaresRemaining--;
     this.flagsRemaining--;
     $("#" + coordinates[0] + "-" + coordinates[1]).addClass("flagged");
+    $("#" + coordinates[0] + "-" + coordinates[1]).find("img").attr("src", "img/mineFlag.png");
     console.log("add flag");
   // this.checkForVictory();
   }
@@ -169,19 +171,25 @@ Board.prototype.loopThroughBoard = function() {
   }
 }
 
-Board.prototype.assignImages = function(coordinates) {
+Board.prototype.assignImages = function(coordinates, isFlag) {
   var row = parseInt(coordinates[0]);
   var column = parseInt(coordinates[1]);
+  var attribute = "";
   debugger;
-  var attribute = this.images[this.grid[row][column]];
-      console.log(attribute);
+  if (isFlag === false)  {
+    attribute = this.images[this.grid[row][column]];
+    return attribute;
+  }
+  else {
+    attribute = "img/mineFlag.png";
+      console.log("already flagged");
+    }
   // for (i =0; i<10;i++) {
   //   if (this.grid[row][column] === i) {
   //     debugger;
   //     var attribute = this.images[i]
   //   }
   // }
-  return attribute;
 };
 
 Board.prototype.revealSquares = function() {
@@ -200,7 +208,9 @@ Board.prototype.revealSquares = function() {
 Board.prototype.revealOneSquare = function(coordinates) {
   // $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
   // this.assignImages(coordinates);
-  $("#" + coordinates[0] + "-" + coordinates[1]).find("img").attr("src", this.assignImages(coordinates));
+  var isFlag = $("#" + coordinates[0] + "-" + coordinates[1]).hasClass("flagged");
+  console.log(isFlag);
+  $("#" + coordinates[0] + "-" + coordinates[1]).find("img").attr("src", this.assignImages(coordinates,isFlag));
 
   if (this.revealedSquares.indexOf(coordinates.join("-")) === -1) {
     this.revealedSquares.push(coordinates.join("-"));
@@ -230,7 +240,7 @@ $(function() {
     var gridWidth = parseInt($("#gridDimension").val());
 
     gameBoard.gridWidth = gridWidth;
-    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * 0.2);
+    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * 0.1);
     gameBoard.squaresRemaining = gridWidth*gridWidth;
     gameBoard.flagsRemaining = gameBoard.bombsRemaining;
     gameBoard.resetGrid();
