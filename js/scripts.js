@@ -12,7 +12,7 @@ function Board() {
   this.gridWidth;
   this.gameOver = false;
   this.revealedSquares=[];
-  this.images = ["img/banana1.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrel.png", "img/explosion.png", "img/mineFlag.png"];
+  this.images = ["img/banana1Red.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrel.png", "img/explosion.png", "img/mineFlag.png"];
   this.userFlagSelect = false;
 }
 
