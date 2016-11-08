@@ -84,7 +84,9 @@ Board.prototype.updateUI = function() {
         //if user is clearing mines
         if (!gameBoard.gameOver && !gameBoard.userFlagSelect) {
           //game over
-          if (clickedSquareObject.hasBomb) {
+          if (clickedSquareObject.hasFlag) {
+            console.log("this has a flag");
+          } else if (clickedSquareObject.hasBomb) {
             gameBoard.revealOneSquare(clickedSquareObject);
             gameBoard.gameOver = true;
             gameBoard.revealAllBombs();
