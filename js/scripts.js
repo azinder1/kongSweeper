@@ -12,7 +12,7 @@ function Board() {
   this.gridWidth;
   this.gameOver = false;
   this.revealedSquares=[];
-  this.images = ["img/banana1.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrel.png", "img/explosion.png", "img/mineFlag.png"];
+  this.images = ["img/banana1Red.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrelCropped.png", "img/explosionRed.jpg", "img/questionMarkRed.png", "img/mineBlankRed.png"];
   this.userFlagSelect = false;
 }
 
@@ -77,13 +77,14 @@ Board.prototype.updateUI = function() {
     $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
-      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img oncontextmenu="return false;" class = "gridSquare" src="img/mineBlankRed.png" alt="square" /></div>');
+      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img oncontextmenu="return false;" class = "gridSquare" src="'+ gameBoard.images[12] + '" alt="square" /></div>');
       // $(squareCoordinateID).click(function() {
       $(squareCoordinateID).mousedown(function(event) {
         var squareCoordinateID = this.id.split("-");
         var clickedSquareObject = gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]];
         switch (event.which) {
           case 1:
+          console.log("case 1");
           //if user is clearing mines
           if (!gameBoard.gameOver) {
             //game over
@@ -91,7 +92,7 @@ Board.prototype.updateUI = function() {
               if (clickedSquareObject.hasBomb) {
               gameBoard.revealOneSquare(clickedSquareObject);
               gameBoard.gameOver = true;
-              gameBoard.revealAllBombs();
+              gameBoard.revealAllBombs(false);
               console.log("game over");
               timer.stopTimer();
               //only check clicked square
@@ -134,16 +135,24 @@ Board.prototype.placeFlag = function(squareObject) {
     this.bombsRemaining--;
     this.squaresRemaining--;
     this.flagsRemaining--;
-    $("#" + squareObject.coordinateString).find("img").attr("src", "img/mineFlag.png");
+    $("#" + squareObject.coordinateString).find("img").attr("src", this.images[11]);
     squareObject.hasFlag = true;
   }
 }
 
-Board.prototype.revealAllBombs = function() {
+Board.prototype.revealAllBombs = function(victory) {
+  console.log("revealing all mines");
+  if (victory) {
+    attribute = this.images[9]
+  }
+  else if(!victory) {
+    attribute = this.images[9]
+  }
   this.grid.forEach(function(row) {
     row.forEach(function(squareObject) {
-      if (squareObject.hasBomb) {
-        $("#" + squareObject.coordinateString).find("img").attr("src", "img/explosion.jpg");
+      if (squareObject.hasBomb && !squareObject.isRevealed) {
+        console.log("assigning each mine to a barrel");
+        $("#" + squareObject.coordinateString).find("img").attr("src", attribute);
       }
     })
   })
@@ -184,11 +193,14 @@ Board.prototype.assignImages = function(coordinates) {
   var row = parseInt(coordinates[0]);
   var column = parseInt(coordinates[1]);
   var squareObject = this.grid[row][column];
-  if (!squareObject.hasFlag)  {
+  if (squareObject.hasBomb){
+    var attribute = this.images[10];
+  }
+  else if (!squareObject.hasFlag)  {
     var attribute = this.images[squareObject.value];
   }
   else {
-    var attribute = "img/mineFlag.png";
+    var attribute = this.images[11];
   }
   return attribute;
 };
@@ -208,12 +220,19 @@ Board.prototype.revealSquares = function() {
 Board.prototype.revealOneSquare = function(squareObject) {
   // $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
   // this.assignImages(coordinates);
-  $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
-  if (this.revealedSquares.indexOf(squareObject.coordinateString) === -1) {
-    this.revealedSquares.push(squareObject.coordinateString);
-    this.squaresRemaining--;
+  if (squareObject.hasBomb) {
+    console.log("assigning clicked mine to explosion");
+    $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
+    squareObject.isRevealed = true;
   }
-  squareObject.isRevealed = true;
+  else {
+    $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
+    if (this.revealedSquares.indexOf(squareObject.coordinateString) === -1) {
+      this.revealedSquares.push(squareObject.coordinateString);
+      this.squaresRemaining--;
+    }
+    squareObject.isRevealed = true;
+  }
 }
 
 Board.prototype.clearArray = function() {
@@ -232,6 +251,7 @@ Board.prototype.checkForVictory = function() {
       timer.highScore = highscore;
     }
     timer.stopTimer();
+    this.revealAllBombs(true);
     console.log("victory");
   }
 }
