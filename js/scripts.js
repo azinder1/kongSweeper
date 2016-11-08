@@ -27,10 +27,12 @@ Board.prototype.placebombs = function() {
   for (bomb = 0; bomb < this.bombsRemaining; bomb++) {
     var locationIndex = Math.floor(Math.random() * potentialLocations.length);
     var randombomb = potentialLocations[locationIndex].split("-");
-    if (this.grid[randombomb[0]][randombomb[1]] === "X") {
+    var squareObject = this.grid[randombomb[0]][randombomb[1]];
+    if (squareObject.hasBomb) {
       bomb--;
     } else {
-      this.grid[randombomb[0]][randombomb[1]] = "X";
+      squareObject.value = "X";
+      squareObject.hasBomb = true;
     }
   }
 }
@@ -39,12 +41,14 @@ Board.prototype.placebombs = function() {
 Board.prototype.setbombWarnings = function() {
   for (row = 0; row < this.gridWidth; row++) {
     for (column = 0; column < this.gridWidth; column++) {
-      if (this.grid[row][column] === "X") {
+      var squareObject = this.grid[row][column];
+      if (squareObject.hasBomb) {
         for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
           for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
             if ((row+rowAdjust >= 0) && (row+rowAdjust <= this.gridWidth-1) && (column+columnAdjust >= 0) && (column+columnAdjust <= this.gridWidth-1)) {
-              if (this.grid[row+rowAdjust][column+columnAdjust] != "X") {
-                this.grid[row+rowAdjust][column+columnAdjust] += 1;
+              var squareToIncrement = this.grid[row+rowAdjust][column+columnAdjust];
+              if (!squareToIncrement.hasBomb) {
+                squareToIncrement.value += 1;
               }
             }
           }
@@ -61,38 +65,38 @@ Board.prototype.resetGrid = function() {
   for (row = 0; row < this.gridWidth; row++) {
     this.grid.push([]);
     for (column = 0; column < this.gridWidth; column++) {
-      this.grid[row].push(0);
+      this.grid[row].push({coordinates: [row, column], coordinateString: row.toString() + "-" + column.toString(), value: 0, hasBomb: false, hasFlag: false, isRevealed: false});
     }
   }
 }
 
 Board.prototype.updateUI = function() {
-  var t0 = performance.now();
   $(".grid").empty();
   for (row = 0; row < this.gridWidth; row++) {
     $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
-      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img class = "gridSquare" src="img/mineBlankRed.png" alt="square" />'+'</div>');
+      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img class = "gridSquare" src="img/mineBlankRed.png" alt="square" /></div>');
       $(squareCoordinateID).click(function() {
         var squareCoordinateID = this.id.split("-");
+        var clickedSquareObject = gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]];
 
         //if user is clearing mines
         if (!gameBoard.gameOver && !gameBoard.userFlagSelect) {
           //game over
-          if (gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]] === "X") {
-            gameBoard.revealOneSquare(squareCoordinateID);
+          if (clickedSquareObject.hasBomb) {
+            gameBoard.revealOneSquare(clickedSquareObject);
             gameBoard.gameOver = true;
             gameBoard.revealAllBombs();
             console.log("game over");
             //only check clicked square
-          } else if (parseInt(gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]]) > 0) {
-            gameBoard.revealOneSquare(squareCoordinateID);
+          } else if (clickedSquareObject.value > 0) {
+            gameBoard.revealOneSquare(clickedSquareObject);
             gameBoard.checkForVictory();
             //run loop to find all connected blank squares
           } else {
-            gameBoard.revealOneSquare(squareCoordinateID);
-            gameBoard.pushAdjacents(squareCoordinateID);
+            gameBoard.revealOneSquare(clickedSquareObject);
+            gameBoard.pushAdjacents(clickedSquareObject.coordinates);
             gameBoard.loopThroughBoard();
             gameBoard.revealSquares();
             gameBoard.clearArray();
@@ -100,57 +104,52 @@ Board.prototype.updateUI = function() {
 
             //if user is placing flags
         } else if (!gameBoard.gameOver && gameBoard.userFlagSelect) {
-          gameBoard.placeFlag(squareCoordinateID);
+          gameBoard.placeFlag(clickedSquareObject);
         }
       });
     }
   }
-  var t1 = performance.now();
-  console.log("updateUI took " + (t1 - t0) + " milliseconds");
 }
 
-Board.prototype.placeFlag = function(coordinates) {
-  if ($("#" + coordinates[0] + "-" + coordinates[1]).hasClass("flagged")) {
+Board.prototype.placeFlag = function(squareObject) {
+  if (squareObject.hasFlag) {
     this.bombsRemaining++;
     this.squaresRemaining++;
     this.flagsRemaining++;
-    $("#" + coordinates[0] + "-" + coordinates[1]).removeClass("flagged");
-    console.log("remove flag");
-  } else if (!($("#" + coordinates[0] + "-" + coordinates[1]).hasClass("flagged"))) {
+    squareObject.hasFlag = false;
+  } else if (!squareObject.hasFlag) {
     this.bombsRemaining--;
     this.squaresRemaining--;
     this.flagsRemaining--;
-    $("#" + coordinates[0] + "-" + coordinates[1]).addClass("flagged");
-    console.log("add flag");
+    squareObject.hasFlag = true;
   // this.checkForVictory();
   }
 }
 
 Board.prototype.revealAllBombs = function() {
-  for (row = 0; row < this.gridWidth; row++) {
-    for (column = 0; column < this.gridWidth; column++) {
-      if (this.grid[row][column] === "X") {
-        // $("#" + row + "-" + column).find("img").hide();
-        $("#" + row + "-" + column).find("img").attr("src", "img/explosion.jpg");
-
+  this.grid.forEach(function(row) {
+    row.forEach(function(squareObject) {
+      if (squareObject.hasBomb) {
+        $("#" + squareObject.coordinateString).find("img").attr("src", "img/explosion.jpg");
       }
-    }
-  }
+    })
+  })
 }
 
 Board.prototype.pushAdjacents = function(coordinates) {
-  var row = parseInt(coordinates[0]);
-  var column = parseInt(coordinates[1]);
+  var row = coordinates[0];
+  var column = coordinates[1];
 
   for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
     for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
       var newCoordinates = [(row + rowAdjust), (column + columnAdjust)];
       if ((row+rowAdjust >= 0) && (row+rowAdjust <= this.gridWidth-1) && (column+columnAdjust >= 0) && (column+columnAdjust <= this.gridWidth-1)) {
-        if (this.grid[row+rowAdjust][column+columnAdjust] != "X") {
-          if (this.grid[newCoordinates[0]][newCoordinates[1]] === 0) {
+        var squareToCheck = this.grid[newCoordinates[0]][newCoordinates[1]];
+        if (!this.grid[row+rowAdjust][column+columnAdjust].hasBomb) {
+          if (squareToCheck.value === 0) {
             this.adjacentBlanks.push(newCoordinates);
             this.toBeRevealed.push(newCoordinates);
-          } else if (this.grid[newCoordinates[0]][newCoordinates[1]] > 0) {
+          } else if (squareToCheck.value > 0) {
             this.toBeRevealed.push(newCoordinates);
           }
         }
@@ -163,8 +162,7 @@ Board.prototype.loopThroughBoard = function() {
   for (var i = 0; i < this.adjacentBlanks.length; i++) {
     if (this.checked.indexOf(this.adjacentBlanks[i].toString()) === -1) {
       this.checked.push(this.adjacentBlanks[i].toString());
-      var coordinates = this.adjacentBlanks[i][0].toString() + "-" + this.adjacentBlanks[i][1].toString();
-      this.pushAdjacents(coordinates.split("-"));
+      this.pushAdjacents([this.adjacentBlanks[i][0], this.adjacentBlanks[i][1]]);
     }
   }
 }
@@ -172,40 +170,32 @@ Board.prototype.loopThroughBoard = function() {
 Board.prototype.assignImages = function(coordinates) {
   var row = parseInt(coordinates[0]);
   var column = parseInt(coordinates[1]);
-  debugger;
-  var attribute = this.images[this.grid[row][column]];
-      console.log(attribute);
-  // for (i =0; i<10;i++) {
-  //   if (this.grid[row][column] === i) {
-  //     debugger;
-  //     var attribute = this.images[i]
-  //   }
-  // }
+  var attribute = this.images[this.grid[row][column].value];
   return attribute;
 };
 
 Board.prototype.revealSquares = function() {
-  for (square = 0; square < this.toBeRevealed.length; square++) {
-    var squareString = this.toBeRevealed[square].join("-");
+  for (squareIndex = 0; squareIndex < this.toBeRevealed.length; squareIndex++) {
+    var squareString = this.toBeRevealed[squareIndex].join("-");
     if(this.revealedSquares.indexOf(squareString) === -1) {
       this.revealedSquares.push(squareString);
       this.squaresRemaining--;
     }
-    $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).find("img").attr("src", this.assignImages(this.toBeRevealed[square]));
+    $("#" + this.toBeRevealed[squareIndex][0] + "-" + this.toBeRevealed[squareIndex][1]).find("img").attr("src", this.assignImages(this.toBeRevealed[squareIndex]));
 
     this.checkForVictory();
   }
 }
 
-Board.prototype.revealOneSquare = function(coordinates) {
+Board.prototype.revealOneSquare = function(squareObject) {
   // $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
   // this.assignImages(coordinates);
-  $("#" + coordinates[0] + "-" + coordinates[1]).find("img").attr("src", this.assignImages(coordinates));
-
-  if (this.revealedSquares.indexOf(coordinates.join("-")) === -1) {
-    this.revealedSquares.push(coordinates.join("-"));
+  $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
+  if (this.revealedSquares.indexOf(squareObject.coordinateString) === -1) {
+    this.revealedSquares.push(squareObject.coordinateString);
     this.squaresRemaining--;
   }
+  squareObject.isRevealed = true;
 }
 
 Board.prototype.clearArray = function() {
@@ -219,7 +209,6 @@ Board.prototype.checkForVictory = function() {
   if (this.squaresRemaining === this.bombsRemaining){
     this.gameOver = true;
     console.log("victory");
-    $(".grid").effect("shake");
   }
 }
 
@@ -241,10 +230,8 @@ $(function() {
 
   $("#flagButton").click(function() {
       gameBoard.userFlagSelect = true;
-      console.log("userFlag = true");
   })
   $("#revealButton").click(function() {
       gameBoard.userFlagSelect = false;
-      console.log("userFlag = false");
   })
 })
