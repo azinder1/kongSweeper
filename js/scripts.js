@@ -9,6 +9,7 @@ function Board() {
   this.gridWidth;
   this.gameOver = false;
   this.revealedSquares=[];
+  this.images = ["img/banana1.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrel.png", "img/explosion.png", "img/mineFlag.png"];
 }
 
 Board.prototype.placeMines = function() {
@@ -65,7 +66,7 @@ Board.prototype.updateUI = function() {
     $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
-      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+this.grid[row][column]+'<img class = "gridSquare" src="img/square.png" alt="square" />'+'</div>');
+      $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img class = "gridSquare" src="img/mineBlankRed.png" alt="square" />'+'</div>');
       $(squareCoordinateID).click(function() {
         if (!gameBoard.gameOver) {
           var squareCoordinateID = this.id.split("-");
@@ -97,7 +98,9 @@ Board.prototype.revealAllBombs = function() {
   for (row = 0; row < this.gridWidth; row++) {
     for (column = 0; column < this.gridWidth; column++) {
       if (this.grid[row][column] === "X") {
-        $("#" + row + "-" + column).find("img").hide();
+        // $("#" + row + "-" + column).find("img").hide();
+        $("#" + row + "-" + column).find("img").attr("src", "img/explosion.jpg");
+
       }
     }
   }
@@ -134,6 +137,21 @@ Board.prototype.loopThroughBoard = function() {
   }
 }
 
+Board.prototype.assignImages = function(coordinates) {
+  var row = parseInt(coordinates[0]);
+  var column = parseInt(coordinates[1]);
+  debugger;
+  var attribute = this.images[this.grid[row][column]];
+      console.log(attribute);
+  // for (i =0; i<10;i++) {
+  //   if (this.grid[row][column] === i) {
+  //     debugger;
+  //     var attribute = this.images[i]
+  //   }
+  // }
+  return attribute;
+};
+
 Board.prototype.revealSquares = function() {
   for (square = 0; square < this.toBeRevealed.length; square++) {
     var squareString = this.toBeRevealed[square].join("-");
@@ -141,13 +159,17 @@ Board.prototype.revealSquares = function() {
       this.revealedSquares.push(squareString);
       this.squaresRemaining--;
     }
-    $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).find("img").hide();
+    $("#" + this.toBeRevealed[square][0] + "-" + this.toBeRevealed[square][1]).find("img").attr("src", this.assignImages(this.toBeRevealed[square]));
+
     this.checkForVictory();
   }
 }
 
 Board.prototype.revealOneSquare = function(coordinates) {
-  $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
+  // $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
+  // this.assignImages(coordinates);
+  $("#" + coordinates[0] + "-" + coordinates[1]).find("img").attr("src", this.assignImages(coordinates));
+
   if (this.revealedSquares.indexOf(coordinates.join("-")) === -1) {
     this.revealedSquares.push(coordinates.join("-"));
     this.squaresRemaining--;

@@ -17,13 +17,6 @@ body {
   text-align: center;
 }
 
-.greenborder {
-  border: 1px solid green;
-}
-
-.redborder {
-  border-top: 1px solid red;
-}
 
 .myButton {
   margin: 10px;
@@ -50,8 +43,6 @@ body {
   font-size: 15px;
   /*background-color:red;*/
   text-align: center;
-  line-height: 20px;
-  padding-top: 17px;
   font-family: '8BITWONDERNominal';
   color: blue;
 }
@@ -59,7 +50,6 @@ body {
 .gridSquare{
   width:48px;
   height: 48px;
-  top: -37px;
   position: relative;
 }
 
