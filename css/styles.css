@@ -28,14 +28,14 @@ body {
 .myButton {
   margin: 10px;
   width: 60px;
-  display: none;
+  /*display: none;*/
 }
 
 .centerstuff {
   display: table;
   margin-left: auto;
   margin-right: auto;
-  border-top: 3px solid black;
+  /*border-top: 3px solid black;*/
 }
 
 .height_min {
