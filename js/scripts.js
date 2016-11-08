@@ -59,6 +59,7 @@ Board.prototype.setbombWarnings = function() {
 }
 
 Board.prototype.resetGrid = function() {
+  timer.stopTimer();
   this.grid.length = 0;
   this.gameOver = false;
   this.revealedSquares.length = 0;
@@ -84,14 +85,15 @@ Board.prototype.updateUI = function() {
         switch (event.which) {
           case 1:
           //if user is clearing mines
-          if (!gameBoard.gameOver && !gameBoard.userFlagSelect) {
+          if (!gameBoard.gameOver) {
             //game over
-            if (clickedSquareObject.hasFlag) {
+            if (!clickedSquareObject.hasFlag) {
               if (clickedSquareObject.hasBomb) {
               gameBoard.revealOneSquare(clickedSquareObject);
               gameBoard.gameOver = true;
               gameBoard.revealAllBombs();
               console.log("game over");
+              timer.stopTimer();
               //only check clicked square
               } else if (clickedSquareObject.value > 0) {
                 gameBoard.revealOneSquare(clickedSquareObject);
@@ -111,7 +113,6 @@ Board.prototype.updateUI = function() {
           case 3:
             if (!gameBoard.gameOver) {
               gameBoard.placeFlag(clickedSquareObject);
-              console.log("Right click flag placed");
             }
             break;
           default:
@@ -135,7 +136,6 @@ Board.prototype.placeFlag = function(squareObject) {
     this.flagsRemaining--;
     $("#" + squareObject.coordinateString).find("img").attr("src", "img/mineFlag.png");
     squareObject.hasFlag = true;
-  // this.checkForVictory();
   }
 }
 
@@ -159,7 +159,7 @@ Board.prototype.pushAdjacents = function(coordinates) {
       if ((row+rowAdjust >= 0) && (row+rowAdjust <= this.gridWidth-1) && (column+columnAdjust >= 0) && (column+columnAdjust <= this.gridWidth-1)) {
         var squareToCheck = this.grid[newCoordinates[0]][newCoordinates[1]];
         if (!this.grid[row+rowAdjust][column+columnAdjust].hasBomb) {
-          if (squareToCheck.value === 0) {
+          if (squareToCheck.value === 0 && !squareToCheck.hasFlag) {
             this.adjacentBlanks.push(newCoordinates);
             this.toBeRevealed.push(newCoordinates);
           } else if (squareToCheck.value > 0) {
@@ -189,7 +189,6 @@ Board.prototype.assignImages = function(coordinates) {
   }
   else {
     var attribute = "img/mineFlag.png";
-    console.log("already flagged");
   }
   return attribute;
 };
@@ -202,9 +201,8 @@ Board.prototype.revealSquares = function() {
       this.squaresRemaining--;
     }
     $("#" + this.toBeRevealed[squareIndex][0] + "-" + this.toBeRevealed[squareIndex][1]).find("img").attr("src", this.assignImages(this.toBeRevealed[squareIndex]));
-
-    this.checkForVictory();
   }
+  this.checkForVictory();
 }
 
 Board.prototype.revealOneSquare = function(squareObject) {
@@ -228,24 +226,53 @@ Board.prototype.checkForVictory = function() {
   // this.squaresRemaining--;
   if (this.squaresRemaining === this.bombsRemaining){
     this.gameOver = true;
+    var highscore = parseInt($('#timer').html());
+    if (highscore < timer.highScore || !timer.highScore) {
+      $('#highscore').text("HIGHSCORE: " + highscore.toString());
+      timer.highScore = highscore;
+    }
+    timer.stopTimer();
     console.log("victory");
   }
 }
 
+function Scoreboard() {
+  this.highScores = [];
+}
+
+function Timer() {
+  this.gameTimer;
+  this.highScore;
+}
+
+Timer.prototype.startTimer = function() {
+   var seconds = 0;
+   this.gameTimer = setInterval(function() {
+     $('#timer').text(seconds);
+     seconds++; }, 1000);
+}
+
+Timer.prototype.stopTimer = function() {
+  clearInterval(this.gameTimer);
+}
+
 var gameBoard = new Board();
+var timer = new Timer();
+
 $(function() {
+  // var difficulty = [Math.floor(gridWidth * gridWidth * 0.1), Math.floor(gridWidth * gridWidth * 0.1), Math.floor(gridWidth * gridWidth * 0.1)]
   $("form").submit(function(event) {
     event.preventDefault();
     var gridWidth = parseInt($("#gridDimension").val());
-
     gameBoard.gridWidth = gridWidth;
-    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * 0.2);
+    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * 0.1);
     gameBoard.squaresRemaining = gridWidth*gridWidth;
     gameBoard.flagsRemaining = gameBoard.bombsRemaining;
     gameBoard.resetGrid();
     gameBoard.placebombs();
     gameBoard.setbombWarnings();
     gameBoard.updateUI();
+    timer.startTimer();
   });
 
   $("#flagButton").click(function() {
