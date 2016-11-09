@@ -10,7 +10,7 @@
     <title>Kongsweeper</title>
   </head>
   <body class="easyBG">
-    <div class="container">
+    <div class="container gameScreen">
       <h1 id="title">Kongsweeper</h1>
       <div class="input">
         <form>
@@ -40,9 +40,23 @@
           <div class="grid">
           </div>
         </div>
-        <div class="leaderboard">
-          <span id="highscore"></span>
+        <div class="grid">
         </div>
+      </div>
+    </div>
+    <div class="container leaderboard">
+      <h2>Leaderboards:</h2>
+      <div class="row">
+        <div class="easyHighScore easyBorder col-md-4">
+          <h3 class="easyHighScore">Easy: </h3><span id="easyHighScore" class="easyHighScore"></span>
+        </div>
+        <div class="mediumHighScore mediumBorder col-md-4">
+          <h3 class="mediumHighScore">Medium: </h3><span id="mediumHighScore" class="mediumHighScore"></span>
+        </div>
+        <div class="hardHighScore hardBorder col-md-4">
+          <h3 class="hardHighScore">Hard: </h3><span id="hardHighScore" class="hardHighScore"></span>
+        </div>
+      </div>
     </div>
   </body>
 </html>

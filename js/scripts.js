@@ -17,6 +17,56 @@ function Board() {
   this.userFlagSelect = false;
 }
 
+Board.prototype.assignImages = function(coordinates) {
+  var row = parseInt(coordinates[0]);
+  var column = parseInt(coordinates[1]);
+  var squareObject = this.grid[row][column];
+  if (squareObject.hasBomb){
+    var attribute = this.images[10];
+  }
+  else if (!squareObject.hasFlag)  {
+    var attribute = this.images[squareObject.value];
+  }
+  else {
+    var attribute = this.images[11];
+  }
+  return attribute;
+};
+
+Board.prototype.cheat = function() {
+  this.squaresRemaining = 0;
+  this.bombsRemaining = 0;
+  this.checkForVictory();
+}
+
+Board.prototype.checkForVictory = function() {
+  // this.squaresRemaining--;
+  if (this.squaresRemaining === this.bombsRemaining){
+    this.gameOver = true;
+    var highscore = parseInt($('#timer').html());
+    timer.stopTimer();
+    this.revealAllBombs(true);
+    scoreboard.checkHighScore(highscore);
+    scoreboard.displayHighScores();
+    console.log("victory");
+  }
+}
+
+Board.prototype.clearArray = function() {
+  this.adjacentBlanks.length = 0;
+  this.checked.length = 0;
+  this.toBeRevealed.length = 0;
+}
+
+Board.prototype.loopThroughBoard = function() {
+  for (var i = 0; i < this.adjacentBlanks.length; i++) {
+    if (this.checked.indexOf(this.adjacentBlanks[i].toString()) === -1) {
+      this.checked.push(this.adjacentBlanks[i].toString());
+      this.pushAdjacents([this.adjacentBlanks[i][0], this.adjacentBlanks[i][1]]);
+    }
+  }
+}
+
 Board.prototype.placebombs = function() {
   var potentialLocations = [];
 
@@ -38,6 +88,102 @@ Board.prototype.placebombs = function() {
   }
 }
 
+Board.prototype.placeFlag = function(squareObject) {
+  if (squareObject.hasFlag && !squareObject.isRevealed) {
+    this.bombsRemaining++;
+    this.squaresRemaining++;
+    this.flagsRemaining++;
+    $("#" + squareObject.coordinateString).find("img").attr("src", "img/mineBlankRed.png");
+    squareObject.hasFlag = false;
+  } else if (!squareObject.hasFlag && !squareObject.isRevealed) {
+    this.bombsRemaining--;
+    this.squaresRemaining--;
+    this.flagsRemaining--;
+    $("#" + squareObject.coordinateString).find("img").attr("src", this.images[11]);
+    squareObject.hasFlag = true;
+  }
+}
+
+Board.prototype.pushAdjacents = function(coordinates) {
+  var row = coordinates[0];
+  var column = coordinates[1];
+
+  for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
+    for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
+      var newCoordinates = [(row + rowAdjust), (column + columnAdjust)];
+      if ((row+rowAdjust >= 0) && (row+rowAdjust <= this.gridWidth-1) && (column+columnAdjust >= 0) && (column+columnAdjust <= this.gridWidth-1)) {
+        var squareToCheck = this.grid[newCoordinates[0]][newCoordinates[1]];
+        if (!this.grid[row+rowAdjust][column+columnAdjust].hasBomb) {
+          if (squareToCheck.value === 0 && !squareToCheck.hasFlag) {
+            this.adjacentBlanks.push(newCoordinates);
+            this.toBeRevealed.push(newCoordinates);
+          } else if (squareToCheck.value > 0) {
+            this.toBeRevealed.push(newCoordinates);
+          }
+        }
+      }
+    }
+  }
+}
+
+Board.prototype.resetGrid = function() {
+  timer.stopTimer();
+  this.grid.length = 0;
+  this.gameOver = false;
+  this.revealedSquares.length = 0;
+  for (row = 0; row < this.gridWidth; row++) {
+    this.grid.push([]);
+    for (column = 0; column < this.gridWidth; column++) {
+      this.grid[row].push({coordinates: [row, column], coordinateString: row.toString() + "-" + column.toString(), value: 0, hasBomb: false, hasFlag: false, isRevealed: false});
+    }
+  }
+}
+
+Board.prototype.revealAllBombs = function(victory) {
+  if (victory) {
+    attribute = this.images[9]
+  }
+  else if(!victory) {
+    attribute = this.images[9]
+  }
+  this.grid.forEach(function(row) {
+    row.forEach(function(squareObject) {
+      if (squareObject.hasBomb && !squareObject.isRevealed) {
+        $("#" + squareObject.coordinateString).find("img").attr("src", attribute);
+      }
+    })
+  })
+}
+
+Board.prototype.revealSquares = function() {
+  for (squareIndex = 0; squareIndex < this.toBeRevealed.length; squareIndex++) {
+    var squareString = this.toBeRevealed[squareIndex].join("-");
+    if(this.revealedSquares.indexOf(squareString) === -1) {
+      this.revealedSquares.push(squareString);
+      this.squaresRemaining--;
+    }
+    $("#" + this.toBeRevealed[squareIndex][0] + "-" + this.toBeRevealed[squareIndex][1]).find("img").attr("src", this.assignImages(this.toBeRevealed[squareIndex]));
+  }
+  this.checkForVictory();
+}
+
+Board.prototype.revealOneSquare = function(squareObject) {
+  // $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
+  // this.assignImages(coordinates);
+  if (squareObject.hasBomb) {
+    $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
+    squareObject.isRevealed = true;
+  }
+  else {
+    $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
+    if (this.revealedSquares.indexOf(squareObject.coordinateString) === -1) {
+      this.revealedSquares.push(squareObject.coordinateString);
+      this.squaresRemaining--;
+    }
+    squareObject.isRevealed = true;
+  }
+}
+
 //add bomb warning numbers to grid
 Board.prototype.setbombWarnings = function() {
   for (row = 0; row < this.gridWidth; row++) {
@@ -55,19 +201,6 @@ Board.prototype.setbombWarnings = function() {
           }
         }
       }
-    }
-  }
-}
-
-Board.prototype.resetGrid = function() {
-  timer.stopTimer();
-  this.grid.length = 0;
-  this.gameOver = false;
-  this.revealedSquares.length = 0;
-  for (row = 0; row < this.gridWidth; row++) {
-    this.grid.push([]);
-    for (column = 0; column < this.gridWidth; column++) {
-      this.grid[row].push({coordinates: [row, column], coordinateString: row.toString() + "-" + column.toString(), value: 0, hasBomb: false, hasFlag: false, isRevealed: false});
     }
   }
 }
@@ -129,141 +262,46 @@ Board.prototype.updateUI = function() {
   console.log("Grid Width: " + $('.grid').width());
 }
 
-Board.prototype.placeFlag = function(squareObject) {
-  if (squareObject.hasFlag && !squareObject.isRevealed) {
-    this.bombsRemaining++;
-    this.squaresRemaining++;
-    this.flagsRemaining++;
-    $("#" + squareObject.coordinateString).find("img").attr("src", "img/mineBlankRed.png");
-    squareObject.hasFlag = false;
-  } else if (!squareObject.hasFlag && !squareObject.isRevealed) {
-    this.bombsRemaining--;
-    this.squaresRemaining--;
-    this.flagsRemaining--;
-    $("#" + squareObject.coordinateString).find("img").attr("src", this.images[11]);
-    squareObject.hasFlag = true;
-  }
-  $("#flags-remaining").text(gameBoard.flagsRemaining);
-}
-
-Board.prototype.revealAllBombs = function(victory) {
-  console.log("revealing all mines");
-  if (victory) {
-    attribute = this.images[9]
-  }
-  else if(!victory) {
-    attribute = this.images[9]
-  }
-  this.grid.forEach(function(row) {
-    row.forEach(function(squareObject) {
-      if (squareObject.hasBomb && !squareObject.isRevealed) {
-        console.log("assigning each mine to a barrel");
-        $("#" + squareObject.coordinateString).find("img").attr("src", attribute);
-      }
-    })
-  })
-}
-
-Board.prototype.pushAdjacents = function(coordinates) {
-  var row = coordinates[0];
-  var column = coordinates[1];
-
-  for (rowAdjust = -1; rowAdjust < 2; rowAdjust++) {
-    for (columnAdjust = -1; columnAdjust < 2; columnAdjust++) {
-      var newCoordinates = [(row + rowAdjust), (column + columnAdjust)];
-      if ((row+rowAdjust >= 0) && (row+rowAdjust <= this.gridWidth-1) && (column+columnAdjust >= 0) && (column+columnAdjust <= this.gridWidth-1)) {
-        var squareToCheck = this.grid[newCoordinates[0]][newCoordinates[1]];
-        if (!this.grid[row+rowAdjust][column+columnAdjust].hasBomb) {
-          if (squareToCheck.value === 0 && !squareToCheck.hasFlag) {
-            this.adjacentBlanks.push(newCoordinates);
-            this.toBeRevealed.push(newCoordinates);
-          } else if (squareToCheck.value > 0) {
-            this.toBeRevealed.push(newCoordinates);
-          }
-        }
-      }
-    }
-  }
-}
-
-Board.prototype.loopThroughBoard = function() {
-  for (var i = 0; i < this.adjacentBlanks.length; i++) {
-    if (this.checked.indexOf(this.adjacentBlanks[i].toString()) === -1) {
-      this.checked.push(this.adjacentBlanks[i].toString());
-      this.pushAdjacents([this.adjacentBlanks[i][0], this.adjacentBlanks[i][1]]);
-    }
-  }
-}
-
-Board.prototype.assignImages = function(coordinates) {
-  var row = parseInt(coordinates[0]);
-  var column = parseInt(coordinates[1]);
-  var squareObject = this.grid[row][column];
-  if (squareObject.hasBomb){
-    var attribute = this.images[10];
-  }
-  else if (!squareObject.hasFlag)  {
-    var attribute = this.images[squareObject.value];
-  }
-  else {
-    var attribute = this.images[11];
-  }
-  return attribute;
-};
-
-Board.prototype.revealSquares = function() {
-  for (squareIndex = 0; squareIndex < this.toBeRevealed.length; squareIndex++) {
-    var squareString = this.toBeRevealed[squareIndex].join("-");
-    if(this.revealedSquares.indexOf(squareString) === -1) {
-      this.revealedSquares.push(squareString);
-      this.squaresRemaining--;
-    }
-    $("#" + this.toBeRevealed[squareIndex][0] + "-" + this.toBeRevealed[squareIndex][1]).find("img").attr("src", this.assignImages(this.toBeRevealed[squareIndex]));
-  }
-  this.checkForVictory();
-}
-
-Board.prototype.revealOneSquare = function(squareObject) {
-  // $("#" + coordinates[0] + "-" + coordinates[1]).find("img").hide();
-  // this.assignImages(coordinates);
-  if (squareObject.hasBomb) {
-    console.log("assigning clicked mine to explosion");
-    $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
-    squareObject.isRevealed = true;
-  }
-  else {
-    $("#" + squareObject.coordinateString).find("img").attr("src", this.assignImages(squareObject.coordinates));
-    if (this.revealedSquares.indexOf(squareObject.coordinateString) === -1) {
-      this.revealedSquares.push(squareObject.coordinateString);
-      this.squaresRemaining--;
-    }
-    squareObject.isRevealed = true;
-  }
-}
-
-Board.prototype.clearArray = function() {
-  this.adjacentBlanks.length = 0;
-  this.checked.length = 0;
-  this.toBeRevealed.length = 0;
-}
-
-Board.prototype.checkForVictory = function() {
-  // this.squaresRemaining--;
-  if (this.squaresRemaining === this.bombsRemaining){
-    this.gameOver = true;
-    var highscore = parseInt($('#timer').html());
-    if (highscore < timer.highScore || !timer.highScore) {
-      $('#highscore').text("HIGHSCORE: " + highscore.toString());
-      timer.highScore = highscore;
-    }
-    timer.stopTimer();
-    this.revealAllBombs(true);
-    console.log("victory");
-  }
-}
-
 function Scoreboard() {
-  this.highScores = [];
+  this.difficulty = 0.1;
+  this.easyHighScore = {highScore: false, name: false};
+  this.mediumHighScore = {highScore: false, name: false};
+  this.hardHighScore = {highScore: false, name: false};
+}
+
+Scoreboard.prototype.checkHighScore = function(score) {
+  if (this.difficulty === 0.1) {
+    if (score < this.easyHighScore.highScore || !this.easyHighScore.highScore) {
+      this.easyHighScore.highScore = score;
+      this.easyHighScore.name = prompt("New High Score!\nPlease enter your name: ");
+    }
+  } else if (this.difficulty === 0.2) {
+    if (score < this.mediumHighScore.highScore || !this.mediumHighScore.highScore) {
+      this.mediumHighScore.highScore = score;
+      this.mediumHighScore.name = prompt("New High Score!\nPlease enter your name: ");
+    }
+  } else if (this.difficulty === 0.3) {
+    if (score < this.hardHighScore.highScore || !this.hardHighScore.highScore) {
+      this.hardHighScore.highScore = score;
+      this.hardHighScore.name = prompt("New High Score!\nPlease enter your name: ");
+    }
+  }
+}
+
+Scoreboard.prototype.displayHighScores = function() {
+  $(".leaderboard").show();
+  if (this.easyHighScore.highScore) {
+    $(".easyHighScore").show();
+    $("#easyHighScore").text(this.easyHighScore.highScore + " (" + this.easyHighScore.name + ")");
+  }
+  if (this.mediumHighScore.highScore) {
+    $(".mediumHighScore").show();
+    $("#mediumHighScore").text(this.mediumHighScore.highScore + " (" + this.mediumHighScore.name + ")");
+  }
+  if (this.hardHighScore.highScore) {
+    $(".hardHighScore").show();
+    $("#hardHighScore").text(this.hardHighScore.highScore + " (" + this.hardHighScore.name + ")");
+  }
 }
 
 function Timer() {
@@ -298,41 +336,59 @@ Board.prototype.changeColor = function() {
 
 var gameBoard = new Board();
 var timer = new Timer();
+var scoreboard = new Scoreboard();
 
 $(function() {
-  var difficulty = 0.1;
   $("#easy").toggleClass("clicked");
   $("#easy").click(function() {
-    difficulty = 0.1;
-    $("#easy").addClass("clicked");
-    $("#medium").removeClass("clicked");
-    $("#hard").removeClass("clicked");
-    $("body").removeClass();
-    $("body").addClass("easyBG");
+    if (gameBoard.gameOver) {
+      scoreboard.difficulty = 0.1;
+      $("#easy").addClass("clicked");
+      $("#medium").removeClass("clicked");
+      $("#hard").removeClass("clicked");
+      $("body").removeClass();
+      $("body").addClass("easyBG");
+    }
   })
   $("#medium").click(function() {
-    difficulty = 0.2;
-    $("#easy").removeClass("clicked");
-    $("#medium").addClass("clicked");
-    $("#hard").removeClass("clicked");
-    $("body").removeClass();
-    $("body").addClass("mediumBG");
+    if (gameBoard.gameOver) {
+      scoreboard.difficulty = 0.2;
+      $("#easy").removeClass("clicked");
+      $("#medium").addClass("clicked");
+      $("#hard").removeClass("clicked");
+      $("body").removeClass();
+      $("body").addClass("mediumBG");
+    }
   })
   $("#hard").click(function() {
-    difficulty = 0.3;
-    $("#easy").removeClass("clicked");
-    $("#medium").removeClass("clicked");
-    $("#hard").addClass("clicked");
-    $("body").removeClass();
-    $("body").addClass("hardBG");
+    if (gameBoard.gameOver) {
+      scoreboard.difficulty = 0.3;
+      $("#easy").removeClass("clicked");
+      $("#medium").removeClass("clicked");
+      $("#hard").addClass("clicked");
+      $("body").removeClass();
+      $("body").addClass("hardBG");
+    }
   })
   $("form").submit(function(event) {
     $(".timer, .flags-remaining").show();
     event.preventDefault();
+
+    $(".grid").removeClass("easyBorder mediumBorder hardBorder");
+    $(".timer").show();
+
+    if (scoreboard.difficulty === 0.1) {
+      $(".grid").addClass("easyBorder");
+    } else if (scoreboard.difficulty === 0.2) {
+      $(".grid").addClass("mediumBorder");
+    } else if (scoreboard.difficulty === 0.3) {
+      $(".grid").addClass("hardBorder");
+    }
+
     var gridWidth = parseInt($("#gridDimension").val());
     gameBoard.gridWidth = gridWidth;
     gameBoard.squaresRemaining = gridWidth*gridWidth;
-    gameBoard.bombsRemaining = Math.floor(gameBoard.squaresRemaining * difficulty);
+    gameBoard.bombsRemaining = Math.floor(gameBoard.squaresRemaining * scoreboard.difficulty);
     gameBoard.totalBombs = gameBoard.bombsRemaining;
     gameBoard.flagsRemaining = gameBoard.bombsRemaining;
     gameBoard.resetGrid();
