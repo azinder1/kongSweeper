@@ -59,7 +59,14 @@ html {
   background-color: black;
   height: 200px;
   width: 500px;
+  border-radius:5%;
 }
+
+#min_height {
+  height: 350px;
+  min-height: 350px;
+}
+
 .grid {
   width: 100%;
   margin-bottom:100px;
@@ -75,6 +82,15 @@ input {
 
 #playerName {
   width: 100px;
+}
+
+#gameOverCondition {
+  color: white;
+  font-size: 20px;
+}
+#gameOverKong {
+  width: 100px;
+  display: block;
 }
 
 .labels {

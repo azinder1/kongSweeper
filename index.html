@@ -12,6 +12,7 @@
     <title>Kongsweeper</title>
   </head>
   <body class="easyBG">
+    <div id="bananaZone"></div>
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-2 instructions">
@@ -25,7 +26,7 @@
         </div>
         <div class="col-lg-8 gameScreen">
           <h1 id="title">Kongsweeper</h1>
-          <div class="input">
+          <div id="min_height" class="input">
             <form>
               <div class="gameSetup">
 
@@ -54,7 +55,8 @@
                 <button class= "btn btn-danger" type="submit">Play!</button>
               </div>
               <div class="centerstuff text-center gameOver">
-                <h2><span id="gameOverCondition"></span></h2>
+                <p><span id="gameOverCondition"></span></p>
+                <img class="centerstuff" id="gameOverKong" src="img/gorilla.gif" alt="Kong" />
                 <button type="button" name="button" class="btn" id="playAgain">Play again</button>
               </div>
             </form>

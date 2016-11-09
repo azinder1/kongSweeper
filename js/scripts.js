@@ -233,7 +233,7 @@ Board.prototype.updateUI = function() {
               $(".grid").effect("shake", {direction: "up",times: 5, distance: 10});
               $(".gameSetup").hide();
               $(".gameOver").show();
-              $("#gameOverCondition").text("You lose!")
+              $("#gameOverCondition").text("You lose! \n")
               console.log("game over");
               timer.stopTimer();
               //only check clicked square
