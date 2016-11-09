@@ -139,6 +139,7 @@ Board.prototype.placeFlag = function(squareObject) {
     $("#" + squareObject.coordinateString).find("img").attr("src", this.images[11]);
     squareObject.hasFlag = true;
   }
+  $("#flags-remaining").text(gameBoard.flagsRemaining);
 }
 
 Board.prototype.revealAllBombs = function(victory) {
@@ -284,7 +285,10 @@ Board.prototype.changeColor = function() {
     var variableGreen = Math.round(5 * (1/ratio));
     var variableBlue =  Math.round(5 * (1/ratio));
     var variableColor = "rgb(" + variableRed + ", " + variableGreen + ", " + variableBlue + ")";
-    $('#bgcolor, .grid').css("background-color", variableColor);
+    $('#bgcolor').css("background-color", variableColor);
+    $('#title').css("color", variableColor);
+
+
   }
 }
 
@@ -319,7 +323,7 @@ $(function() {
     $("body").addClass("hardBG");
   })
   $("form").submit(function(event) {
-    $(".timer").show();
+    $(".timer, .flags-remaining").show();
     event.preventDefault();
     var gridWidth = parseInt($("#gridDimension").val());
     gameBoard.gridWidth = gridWidth;
