@@ -267,17 +267,17 @@ function Scoreboard() {
 
 Scoreboard.prototype.checkHighScore = function(score) {
   if (this.difficulty === 0.1) {
-    if (score < this.easyHighScore || !this.easyHighScore.highScore) {
+    if (score < this.easyHighScore.highScore || !this.easyHighScore.highScore) {
       this.easyHighScore.highScore = score;
       this.easyHighScore.name = prompt("New High Score!\nPlease enter your name: ");
     }
   } else if (this.difficulty === 0.2) {
-    if (score < this.mediumHighScore || !this.mediumHighScore.highScore) {
+    if (score < this.mediumHighScore.highScore || !this.mediumHighScore.highScore) {
       this.mediumHighScore.highScore = score;
       this.mediumHighScore.name = prompt("New High Score!\nPlease enter your name: ");
     }
   } else if (this.difficulty === 0.3) {
-    if (score < this.hardHighScore || !this.hardHighScore.highScore) {
+    if (score < this.hardHighScore.highScore || !this.hardHighScore.highScore) {
       this.hardHighScore.highScore = score;
       this.hardHighScore.name = prompt("New High Score!\nPlease enter your name: ");
     }
