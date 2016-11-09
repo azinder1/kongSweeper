@@ -94,12 +94,14 @@ Board.prototype.placeFlag = function(squareObject) {
     this.flagsRemaining++;
     $("#" + squareObject.coordinateString).find("img").attr("src", "img/mineBlankRed.png");
     squareObject.hasFlag = false;
+    $("#flags-remaining").text(this.flagsRemaining);
   } else if (!squareObject.hasFlag && !squareObject.isRevealed) {
     this.bombsRemaining--;
     this.squaresRemaining--;
     this.flagsRemaining--;
     $("#" + squareObject.coordinateString).find("img").attr("src", this.images[11]);
     squareObject.hasFlag = true;
+    $("#flags-remaining").text(this.flagsRemaining);
   }
 }
 
@@ -204,6 +206,7 @@ Board.prototype.setbombWarnings = function() {
 
 Board.prototype.updateUI = function() {
   $(".grid").empty();
+  $("#flags-remaining").text(this.flagsRemaining);
   for (row = 0; row < this.gridWidth; row++) {
     $(".grid").append('<div class="row gridRow centerstuff" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
@@ -286,7 +289,7 @@ Scoreboard.prototype.checkHighScore = function(score) {
 }
 
 Scoreboard.prototype.displayHighScores = function() {
-  $(".leaderboard").show("puff",750);
+  $(".leaderboard").show();
   if (this.easyHighScore.highScore) {
     $(".easyHighScore").show();
     $("#easyHighScore").text(this.easyHighScore.highScore + " (" + this.easyHighScore.name + ", Grid Width: " + this.easyHighScore.gridWidth + ")");
@@ -368,7 +371,7 @@ $(function() {
     }
   })
   $("form").submit(function(event) {
-    $(".counters").show("puff",750);
+    $(".counters").show();
     event.preventDefault();
 
     $(".grid").removeClass("easyBorder mediumBorder hardBorder");
@@ -393,8 +396,8 @@ $(function() {
     gameBoard.setbombWarnings();
     gameBoard.updateUI();
 
-    var heightofGrid = $('.grid').height();
-    $('.grid').css({'width':heightofGrid+'px'});
+    // var heightofGrid = $('.grid').height();
+    // $('.grid').css({'width':heightofGrid+'px'});
 
     timer.startTimer();
   });
