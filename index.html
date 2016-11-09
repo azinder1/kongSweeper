@@ -17,7 +17,7 @@
         <div class="col-lg-2 instructions">
           <h2>Instructions:</h2><br>
           The goal of Kongsweeper is to uncover all the squares that don't contain TNT without being blown up.<br><br>
-          Select your difficulty, enter your name and add the width of your grid.<br><br>
+          Select your difficulty, enter your name and add the width of your grid (between 5 and 30 squares).<br><br>
           Left click to reveal a square.<br><br>
           Right click to flag a possible bomb.<br><br>
           The counter will tell you how many flags remain.<br><br>
@@ -46,7 +46,7 @@
                   <label for="gridDimension">Set grid width:</label>
                 </div>
                 <div class="col-xs-6">
-                  <input type="number" id="gridDimension" value="10" min="1" max="30">
+                  <input type="number" id="gridDimension" value="10" min="5" max="30">
                 </div>
               </div>
               <button class= "btn btn-danger" type="submit">Play!</button>
@@ -68,13 +68,13 @@
         <div class="col-lg-2 leaderboard">
           <h2>Leaderboards:</h2>
           <div class="row">
-            <div class="easyHighScore easyBorder">
+            <div class="easyHighScore">
               <h3 class="easyHighScore">Easy: </h3><span id="easyHighScore" class="easyHighScore"></span>
             </div>
-            <div class="mediumHighScore mediumBorder">
+            <div class="mediumHighScore">
               <h3 class="mediumHighScore">Medium: </h3><span id="mediumHighScore" class="mediumHighScore"></span>
             </div>
-            <div class="hardHighScore hardBorder">
+            <div class="hardHighScore">
               <h3 class="hardHighScore">Hard: </h3><span id="hardHighScore" class="hardHighScore"></span>
             </div>
           </div>
