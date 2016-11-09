@@ -11,7 +11,7 @@ function Board() {
   this.squaresRemaining;
   this.flagsRemaining;
   this.gridWidth;
-  this.gameOver = false;
+  this.gameOver = true;
   this.revealedSquares=[];
   this.images = ["img/banana1.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrelCropped.png", "img/explosionRed.png", "img/questionMarkTransparent.png", "img/mineBlankRed.png"];
   this.userFlagSelect = false;
@@ -398,6 +398,7 @@ $(function() {
     }
   })
   $("#hard").click(function() {
+    console.log("clicked");
     if (gameBoard.gameOver) {
       scoreboard.difficulty = 0.3;
       $("#easy").removeClass("clicked");
@@ -423,13 +424,14 @@ $(function() {
 
     if (scoreboard.difficulty === 0.1) {
       $(".grid").addClass("easyBorder");
-    } else if (scoreboard.difficulty === 0.2) {
+    } else if (scoreboard.difficulty === 0.15) {
       $(".grid").addClass("mediumBorder");
-    } else if (scoreboard.difficulty === 0.3) {
+    } else if (scoreboard.difficulty === 0.20) {
       $(".grid").addClass("hardBorder");
     }
 
     var gridWidth = parseInt($("#gridDimension").val());
+    gameBoard.gameOver = true;
     gameBoard.gridWidth = gridWidth;
     gameBoard.squaresRemaining = gridWidth*gridWidth;
     gameBoard.bombsRemaining = Math.floor(gameBoard.squaresRemaining * scoreboard.difficulty);

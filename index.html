@@ -12,70 +12,79 @@
     <title>Kongsweeper</title>
   </head>
   <body class="easyBG">
-    <div class="container gameScreen" id="site">
-      <div id="bananaZone"></div>
-      <h1 id="title">Kongsweeper</h1>
-      <div class="input">
-        <form>
-          <div class="gameSetup">
-            <label for="difficultyButtons">Select a skill level:</label>
-            <div class="form-group" id="difficultyButtons">
-              <img class="skill-button" id="easy" src="img/diddy.png" alt="Diddy Kong" />
-              <img class="skill-button" id="medium" src="img/donkey.png" alt="Donkey Kong" />
-              <img class="skill-button" id="hard" src="img/cranky.png" alt="Cranky Kong" />
-            </div>
-            <div class="row playerName">
-              <div class="col-xs-6 text-right">
-                <label for="playerName">Enter your name:</label>
-              </div>
-              <div class="col-xs-6">
-                <input type="text" id="playerName" value="Player"><br>
-              </div>
-          <div class="gridWidth">
-            <div class="col-xs-6 text-right">
-              <label for="gridDimension">Set grid width:</label>
-            </div>
-            <div class="col-xs-6">
-              <input type="number" id="gridDimension" value="10" min="1" max="22">
-            </div>
-          </div>
-          <button class= "btn btn-danger" type="submit">Play!</button>
-        </div>
-      </div>
-      <div class="centerstuff text-center gameOver">
-        <h2><span id="gameOverCondition"></span></h2>
-        <button type="button" name="button" class="btn" id="playAgain">Play again</button>
-      </div>
-
-        </form>
-      </div>
-        <div class="centerstuff text-center">
-          <div class="counters row">
-            <div class="col-md-4 timer">
-              <label>Timer: <span id="timer"></span></label>
-            </div>
-            <div class="col-md-4">
-            </div>
-            <div class="col-md-4 flags-remaining">
-              <label>Flags: <span id="flags-remaining"></span></label>
-            </div>
-          </div>
-          <div class="grid">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container leaderboard">
-      <h2>Leaderboards:</h2>
+    <div class="container-fluid">
       <div class="row">
-        <div class="easyHighScore easyBorder col-md-4">
-          <h3 class="easyHighScore">Easy: </h3><span id="easyHighScore" class="easyHighScore"></span>
+        <div class="col-lg-2 instructions">
+          <h2>Instructions:</h2><br>
+          The goal of Kongsweeper is to uncover all the squares that don't contain TNT without being blown up.<br><br>
+          Select your difficulty, enter your name and add the width of your grid (between 5 and 30 squares).<br><br>
+          Left click to reveal a square.<br><br>
+          Right click to flag a possible bomb.<br><br>
+          The counter will tell you how many flags remain.<br><br>
+          Clear all the bombs in the fastest time and earn your spot on the leaderboard!
         </div>
-        <div class="mediumHighScore mediumBorder col-md-4">
-          <h3 class="mediumHighScore">Medium: </h3><span id="mediumHighScore" class="mediumHighScore"></span>
+        <div class="col-lg-8 gameScreen">
+          <h1 id="title">Kongsweeper</h1>
+          <div class="input">
+            <form>
+              <div class="gameSetup">
+
+                <label for="difficultyButtons">Select a skill level:</label>
+                <div class="form-group" id="difficultyButtons">
+                  <img class="skill-button" id="easy" src="img/diddy.png" alt="Diddy Kong" />
+                  <img class="skill-button" id="medium" src="img/donkey.png" alt="Donkey Kong" />
+                  <img class="skill-button" id="hard" src="img/cranky.png" alt="Cranky Kong" />
+                </div>
+                <div class="row playerName">
+                  <div class="col-xs-6 text-right">
+                    <label for="playerName">Enter your name:</label>
+                  </div>
+                  <div class="col-xs-6">
+                    <input type="text" id="playerName" value="Player" autocomplete="off"><br>
+                  </div>
+                </div>
+                <div class="gridWidth">
+                  <div class="col-xs-6 text-right">
+                    <label for="gridDimension">Set grid width:</label>
+                  </div>
+                  <div class="col-xs-6">
+                    <input type="number" id="gridDimension" value="10" min="5" max="30">
+                  </div>
+                </div>
+                <button class= "btn btn-danger" type="submit">Play!</button>
+              </div>
+              <div class="centerstuff text-center gameOver">
+                <h2><span id="gameOverCondition"></span></h2>
+                <button type="button" name="button" class="btn" id="playAgain">Play again</button>
+              </div>
+            </form>
+            <div class="counters row">
+              <div class="col-md-6 flags-remaining text-right">
+                <label>Flags: <span id="flags-remaining"></span></label>
+              </div>
+              <div class="col-md-6 timer text-left">
+                <label>Timer: <span id="timer"></span></label>
+              </div>
+            </div>
+          </div>
+          <div class="centerstuff text-center">
+            <div class="grid">
+            </div>
+          </div>
         </div>
-        <div class="hardHighScore hardBorder col-md-4">
-          <h3 class="hardHighScore">Hard: </h3><span id="hardHighScore" class="hardHighScore"></span>
+        <div class="col-lg-2 leaderboard">
+          <h2>Leaderboards:</h2>
+          <div class="row">
+            <div class="easyHighScore">
+              <h3 class="easyHighScore">Easy: </h3><span id="easyHighScore" class="easyHighScore"></span>
+            </div>
+            <div class="mediumHighScore">
+              <h3 class="mediumHighScore">Medium: </h3><span id="mediumHighScore" class="mediumHighScore"></span>
+            </div>
+            <div class="hardHighScore">
+              <h3 class="hardHighScore">Hard: </h3><span id="hardHighScore" class="hardHighScore"></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

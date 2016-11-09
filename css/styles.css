@@ -7,6 +7,12 @@ h1 {
 
 h2 {
   font-family: '8BITWONDERNominal';
+  font-size: 16px;
+}
+
+h3 {
+  font-family: '8BITWONDERNominal';
+  font-size: 14px;
 }
 
 html {
@@ -14,16 +20,25 @@ html {
   width: 100%;
 }
 
+.instructions, .leaderboard {
+  margin-top:10%;
+  background-color: rgba(2,2,2, 0.6);
+  border-radius: 20px;
+  color: white;
+  height:500px;
+}
+
 .gameScreen {
   margin-top: 10%;
   background-color: rgba(255,255,255, 0.6);
   border-radius: 2%;
   size: contain;
-  min-width: 1150px;
+  min-width: 930px;
   font-family: '8BITWONDERNominal';
 }
+
 .input {
-  margin-bottom: 75px;
+  margin-bottom: 5px;
   text-align: center;
 }
 
@@ -36,6 +51,7 @@ html {
 }
 .counters {
   display: none;
+  margin-top: 20px;
 }
 
 .gameOver {
@@ -73,18 +89,14 @@ input {
 .gridColumn {
   float: left;
   border: 1px solid black;
-  height: 50px;
-  width: 50px;
-  font-size: 15px;
+  height: 30px;
+  width: 30px;
   /*background-color:red;*/
-  text-align: center;
-  font-family: '8BITWONDERNominal';
-  color: blue;
 }
 
 .gridSquare{
-  width:48px;
-  height: 48px;
+  width:28px;
+  height: 28px;
   position: relative;
 }
 
@@ -114,19 +126,9 @@ input {
   width: 15%;
 }
 
-.leaderboard {
-  margin-bottom: 100px;
-  margin-top: 20px;
-  padding: 50px;
-  background-color: rgba(0,0,0, 0.8);
-  border-radius: 2%;
-  size: contain;
-  color: white;
-  font-family: monospace;
-}
-
-.leaderboard, .easyHighScore, .mediumHighScore, .hardHighScore {
+.easyHighScore, .mediumHighScore, .hardHighScore {
   display: none;
+  margin: 5px;
 }
 
 .easyBG {
@@ -172,7 +174,7 @@ input {
 }
 
 button {
-  margin-top: 5px;
+  margin: 5px 0px 20px 0px;
 }
 
 .clicked {
