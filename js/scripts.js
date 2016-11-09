@@ -43,6 +43,10 @@ Board.prototype.checkForVictory = function() {
   // this.squaresRemaining--;
   if (this.squaresRemaining === this.bombsRemaining){
     this.gameOver = true;
+    fallingBanana();
+    $(".gameSetup").hide();
+    $(".gameOver").show()
+    $("#gameOverCondition").text("You win!")
     var highscore = parseInt($('#timer').html());
     timer.stopTimer();
     this.revealAllBombs(true);
@@ -227,6 +231,9 @@ Board.prototype.updateUI = function() {
               gameBoard.gameOver = true;
               gameBoard.revealAllBombs(false);
               $(".grid").effect("shake", {direction: "up",times: 5, distance: 10});
+              $(".gameSetup").hide();
+              $(".gameOver").show();
+              $("#gameOverCondition").text("You lose!")
               console.log("game over");
               timer.stopTimer();
               //only check clicked square
@@ -334,6 +341,36 @@ Board.prototype.changeColor = function() {
   }
 }
 
+function fallingBanana() {
+    var $bananas = $(),
+        createBananas = function () {
+            var qt = 30;
+            for (var i = 0; i < qt; ++i) {
+                var $banana = $('<img class="bananas"  style="transform: rotate(360deg); transform-origin: bottom left;" src="img/banana1.png">');
+                $banana.css({
+                    'left': (Math.random() * $('body').width()) + 'px',
+                    'top': (- Math.random() * $('body').height()) + 'px'
+                });
+                $bananas = $bananas.add($banana);
+            }
+            $('#bananaZone').prepend($bananas);
+        },
+
+        runBananaStorm = function() {
+            $bananas.each(function() {
+                var singleAnimation = function($nanner) {
+                    $nanner.animate({
+                        top: "1000px",
+                        opacity : "0",
+                    }, Math.random()*-2500 + 5000)
+                };
+                singleAnimation($(this));
+            });
+    };
+    createBananas();
+    runBananaStorm();
+}
+
 var gameBoard = new Board();
 var timer = new Timer();
 var scoreboard = new Scoreboard();
@@ -370,8 +407,15 @@ $(function() {
       $("body").addClass("hardBG");
     }
   })
+  $(function() {
+    $("#playAgain").click(function() {
+      $(".gameOver").hide();
+      $(".gameSetup").show();
+    })
+  })
   $("form").submit(function(event) {
     $(".counters").show();
+    $("#bananaZone").empty();
     event.preventDefault();
 
     $(".grid").removeClass("easyBorder mediumBorder hardBorder");

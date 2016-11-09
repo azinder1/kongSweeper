@@ -12,24 +12,25 @@
     <title>Kongsweeper</title>
   </head>
   <body class="easyBG">
-    <div class="container gameScreen">
+    <div class="container gameScreen" id="site">
+      <div id="bananaZone"></div>
       <h1 id="title">Kongsweeper</h1>
       <div class="input">
         <form>
-          <label for="difficultyButtons">Select a skill level:</label>
-          <div class="form-group" id="difficultyButtons">
-            <img class="skill-button" id="easy" src="img/diddy.png" alt="Diddy Kong" />
-            <img class="skill-button" id="medium" src="img/donkey.png" alt="Donkey Kong" />
-            <img class="skill-button" id="hard" src="img/cranky.png" alt="Cranky Kong" />
-          </div>
-          <div class="row playerName">
-            <div class="col-xs-6 text-right">
-              <label for="playerName">Enter your name:</label>
+          <div class="gameSetup">
+            <label for="difficultyButtons">Select a skill level:</label>
+            <div class="form-group" id="difficultyButtons">
+              <img class="skill-button" id="easy" src="img/diddy.png" alt="Diddy Kong" />
+              <img class="skill-button" id="medium" src="img/donkey.png" alt="Donkey Kong" />
+              <img class="skill-button" id="hard" src="img/cranky.png" alt="Cranky Kong" />
             </div>
-            <div class="col-xs-6">
-              <input type="text" id="playerName" value="Player"><br>
-            </div>
-          </div>
+            <div class="row playerName">
+              <div class="col-xs-6 text-right">
+                <label for="playerName">Enter your name:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" id="playerName" value="Player"><br>
+              </div>
           <div class="gridWidth">
             <div class="col-xs-6 text-right">
               <label for="gridDimension">Set grid width:</label>
@@ -39,6 +40,13 @@
             </div>
           </div>
           <button class= "btn btn-danger" type="submit">Play!</button>
+        </div>
+      </div>
+      <div class="centerstuff text-center gameOver">
+        <h2><span id="gameOverCondition"></span></h2>
+        <button type="button" name="button" class="btn" id="playAgain">Play again</button>
+      </div>
+
         </form>
       </div>
         <div class="centerstuff text-center">
