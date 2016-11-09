@@ -126,13 +126,13 @@ Board.prototype.updateUI = function() {
 }
 
 Board.prototype.placeFlag = function(squareObject) {
-  if (squareObject.hasFlag) {
+  if (squareObject.hasFlag && !squareObject.isRevealed) {
     this.bombsRemaining++;
     this.squaresRemaining++;
     this.flagsRemaining++;
     $("#" + squareObject.coordinateString).find("img").attr("src", "img/mineBlankRed.png");
     squareObject.hasFlag = false;
-  } else if (!squareObject.hasFlag) {
+  } else if (!squareObject.hasFlag && !squareObject.isRevealed) {
     this.bombsRemaining--;
     this.squaresRemaining--;
     this.flagsRemaining--;
@@ -299,19 +299,24 @@ $(function() {
     $("#easy").addClass("clicked");
     $("#medium").removeClass("clicked");
     $("#hard").removeClass("clicked");
+    $("body").removeClass();
+    $("body").addClass("easyBG");
   })
   $("#medium").click(function() {
     difficulty = 0.2;
     $("#easy").removeClass("clicked");
     $("#medium").addClass("clicked");
     $("#hard").removeClass("clicked");
+    $("body").removeClass();
+    $("body").addClass("mediumBG");
   })
   $("#hard").click(function() {
-    console.log("hard");
     difficulty = 0.3;
     $("#easy").removeClass("clicked");
     $("#medium").removeClass("clicked");
     $("#hard").addClass("clicked");
+    $("body").removeClass();
+    $("body").addClass("hardBG");
   })
   $("form").submit(function(event) {
     $(".timer").show();

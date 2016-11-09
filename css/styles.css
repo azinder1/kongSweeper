@@ -8,15 +8,6 @@ html {
   width: 100%;
 }
 
-body {
-  height: cover;
-  width: 100%;
-  background-image: url(../img/wallpaper.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
 .container {
   margin-top: 10%;
   background-color: rgba(255,255,255, 0.8);
@@ -88,10 +79,53 @@ body {
 .skill-button {
   width: 15%;
 }
+
+.easyBG {
+  height: cover;
+  width: 100%;
+  background-image: url(../img/easyBG.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.easyBorder {
+
+}
+
+.mediumBorder {
+  
+}
+
+.mediumBG {
+  height: cover;
+  width: 100%;
+  background-image: url(../img/mediumBG.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.hardBG {
+  height: cover;
+  width: 100%;
+  background-image: url(../img/hardBG.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.skill-button:hover {
+  background-color: maroon;
+  border-radius: 10%;
+  opacity: 0.5;
+}
+
 .clicked {
   background-color: maroon;
   border-radius: 10%;
 }
+
 input {
   width: 3em;
 }
