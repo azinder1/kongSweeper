@@ -34,10 +34,7 @@ html {
   margin-right: auto;
   /*border-top: 3px solid black;*/
 }
-.timer {
-  display: none;
-}
-.flags-remaining {
+.counters {
   display: none;
 }
 
@@ -85,7 +82,7 @@ input {
   position: relative;
 }
 
-#bgcolor {
+#shake {
   height: 100px;
   width: 100px;
   background-color: black;

@@ -223,6 +223,8 @@ Board.prototype.updateUI = function() {
               gameBoard.revealOneSquare(clickedSquareObject);
               gameBoard.gameOver = true;
               gameBoard.revealAllBombs(false);
+              $(".grid").effect("shake", {direction: "up",times: 5, distance: 10});
+              console.log("game over");
               timer.stopTimer();
               //only check clicked square
               } else if (clickedSquareObject.value > 0) {
@@ -284,7 +286,7 @@ Scoreboard.prototype.checkHighScore = function(score) {
 }
 
 Scoreboard.prototype.displayHighScores = function() {
-  $(".leaderboard").show();
+  $(".leaderboard").show("puff",750);
   if (this.easyHighScore.highScore) {
     $(".easyHighScore").show();
     $("#easyHighScore").text(this.easyHighScore.highScore + " (" + this.easyHighScore.name + ", Grid Width: " + this.easyHighScore.gridWidth + ")");
@@ -366,11 +368,11 @@ $(function() {
     }
   })
   $("form").submit(function(event) {
-    $(".timer, .flags-remaining").show();
+    $(".counters").show("puff",750);
     event.preventDefault();
 
     $(".grid").removeClass("easyBorder mediumBorder hardBorder");
-    $(".timer").show();
+    // $(".timer").show();
 
     if (scoreboard.difficulty === 0.1) {
       $(".grid").addClass("easyBorder");
@@ -390,6 +392,10 @@ $(function() {
     gameBoard.placebombs();
     gameBoard.setbombWarnings();
     gameBoard.updateUI();
+
+    var heightofGrid = $('.grid').height();
+    $('.grid').css({'width':heightofGrid+'px'});
+
     timer.startTimer();
   });
 })
