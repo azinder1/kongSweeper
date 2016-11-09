@@ -22,8 +22,22 @@
             <img class="skill-button" id="medium" src="img/donkey.png" alt="Donkey Kong" />
             <img class="skill-button" id="hard" src="img/cranky.png" alt="Cranky Kong" />
           </div>
-          <label for="gridDimension">Set grid dimension:</label>
-          <input type="number" id="gridDimension" value="10" min="1" max="22">
+          <div class="row playerName">
+            <div class="col-xs-6 text-right">
+              <label for="playerName">Enter your name:</label>
+            </div>
+            <div class="col-xs-6">
+              <input type="text" id="playerName" value="Player"><br>
+            </div>
+          </div>
+          <div class="gridWidth">
+            <div class="col-xs-6 text-right">
+              <label for="gridDimension">Set grid width:</label>
+            </div>
+            <div class="col-xs-6">
+              <input type="number" id="gridDimension" value="10" min="1" max="22">
+            </div>
+          </div>
           <button class= "btn btn-danger" type="submit">Play!</button>
         </form>
       </div>
@@ -33,12 +47,11 @@
               <label>Timer: <span id="timer"></span></label>
             </div>
             <div class="col-md-4">
-
             </div>
             <div class="col-md-4 flags-remaining">
               <label>Flags: <span id="flags-remaining"></span></label>
             </div>
-        </div>
+          </div>
           <div class="grid">
           </div>
         </div>

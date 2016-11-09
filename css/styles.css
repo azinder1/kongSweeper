@@ -41,7 +41,25 @@ html {
 .grid {
   width: 100%;
   margin-bottom:100px;
+  background-color: red;
 }
+
+input {
+  font-family: monospace;
+  font-weight: bold;
+  float: left;
+  width: 100px;
+}
+
+#playerName {
+  width: 100px;
+}
+
+.labels {
+  text-align: right;
+}
+
+
 .height_min {
   height: 30px;
 }
@@ -147,11 +165,11 @@ html {
   opacity: 0.5;
 }
 
+button {
+  margin-top: 5px;
+}
+
 .clicked {
   background-color: maroon;
   border-radius: 10%;
-}
-
-input {
-  width: 3em;
 }

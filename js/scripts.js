@@ -48,7 +48,6 @@ Board.prototype.checkForVictory = function() {
     this.revealAllBombs(true);
     scoreboard.checkHighScore(highscore);
     scoreboard.displayHighScores();
-    console.log("victory");
   }
 }
 
@@ -140,12 +139,7 @@ Board.prototype.resetGrid = function() {
 }
 
 Board.prototype.revealAllBombs = function(victory) {
-  if (victory) {
-    attribute = this.images[9]
-  }
-  else if(!victory) {
-    attribute = this.images[9]
-  }
+  var  attribute = this.images[9];
   this.grid.forEach(function(row) {
     row.forEach(function(squareObject) {
       if (squareObject.hasBomb && !squareObject.isRevealed) {
@@ -160,6 +154,9 @@ Board.prototype.revealSquares = function() {
     var squareString = this.toBeRevealed[squareIndex].join("-");
     if(this.revealedSquares.indexOf(squareString) === -1) {
       this.revealedSquares.push(squareString);
+      var squareObjectCoordinates = this.toBeRevealed[squareIndex];
+      var squareObject = this.grid[squareObjectCoordinates[0]][squareObjectCoordinates[1]];
+      squareObject.isRevealed = true;
       this.squaresRemaining--;
     }
     $("#" + this.toBeRevealed[squareIndex][0] + "-" + this.toBeRevealed[squareIndex][1]).find("img").attr("src", this.assignImages(this.toBeRevealed[squareIndex]));
@@ -257,30 +254,36 @@ Board.prototype.updateUI = function() {
       })
     }
   }
+  var heightofGrid = $('.grid').height();
+  console.log(heightofGrid);
+  $('.grid').css({'width':heightofGrid+'px'});
 }
 
 function Scoreboard() {
   this.difficulty = 0.1;
-  this.easyHighScore = {highScore: false, name: false};
-  this.mediumHighScore = {highScore: false, name: false};
-  this.hardHighScore = {highScore: false, name: false};
+  this.easyHighScore = {highScore: false, name: false, gridWidth: false};
+  this.mediumHighScore = {highScore: false, name: false, gridWidth: false};
+  this.hardHighScore = {highScore: false, name: false, gridWidth: false};
 }
 
 Scoreboard.prototype.checkHighScore = function(score) {
   if (this.difficulty === 0.1) {
     if (score < this.easyHighScore.highScore || !this.easyHighScore.highScore) {
       this.easyHighScore.highScore = score;
-      this.easyHighScore.name = prompt("New High Score!\nPlease enter your name: ");
+      this.easyHighScore.name = $("#playerName").val();
+      this.easyHighScore.gridWidth = gameBoard.gridWidth;
     }
   } else if (this.difficulty === 0.2) {
     if (score < this.mediumHighScore.highScore || !this.mediumHighScore.highScore) {
       this.mediumHighScore.highScore = score;
-      this.mediumHighScore.name = prompt("New High Score!\nPlease enter your name: ");
+      this.mediumHighScore.name = $("#playerName").val();
+      this.mediumHighScore.gridWidth = gameBoard.gridWidth;
     }
   } else if (this.difficulty === 0.3) {
     if (score < this.hardHighScore.highScore || !this.hardHighScore.highScore) {
       this.hardHighScore.highScore = score;
-      this.hardHighScore.name = prompt("New High Score!\nPlease enter your name: ");
+      this.hardHighScore.name = $("#playerName").val();
+      this.hardHighScore.gridWidth = gameBoard.gridWidth;
     }
   }
 }
@@ -289,15 +292,15 @@ Scoreboard.prototype.displayHighScores = function() {
   $(".leaderboard").show("puff",750);
   if (this.easyHighScore.highScore) {
     $(".easyHighScore").show();
-    $("#easyHighScore").text(this.easyHighScore.highScore + " (" + this.easyHighScore.name + ")");
+    $("#easyHighScore").text(this.easyHighScore.highScore + " (" + this.easyHighScore.name + ", Grid Width: " + this.easyHighScore.gridWidth + ")");
   }
   if (this.mediumHighScore.highScore) {
     $(".mediumHighScore").show();
-    $("#mediumHighScore").text(this.mediumHighScore.highScore + " (" + this.mediumHighScore.name + ")");
+    $("#mediumHighScore").text(this.mediumHighScore.highScore + " (" + this.mediumHighScore.name + ", Grid Width: " + this.mediumHighScore.gridWidth + ")");
   }
   if (this.hardHighScore.highScore) {
     $(".hardHighScore").show();
-    $("#hardHighScore").text(this.hardHighScore.highScore + " (" + this.hardHighScore.name + ")");
+    $("#hardHighScore").text(this.hardHighScore.highScore + " (" + this.hardHighScore.name + ", Grid Width: " + this.hardHighScore.gridWidth + ")");
   }
 }
 
