@@ -252,6 +252,7 @@ Board.prototype.updateUI = function() {
           default:
             break;
         }
+        gameBoard.changeColor();
       })
     }
   }
@@ -315,6 +316,20 @@ Timer.prototype.stopTimer = function() {
   clearInterval(this.gameTimer);
 }
 
+Board.prototype.changeColor = function() {
+  var ratio = gameBoard.bombsRemaining / gameBoard.totalBombs ;
+  if (ratio > .2) {
+    var variableRed = Math.round(50 * (1/ratio));
+    var variableGreen = Math.round(5 * (1/ratio));
+    var variableBlue =  Math.round(5 * (1/ratio));
+    var variableColor = "rgb(" + variableRed + ", " + variableGreen + ", " + variableBlue + ")";
+    $('#bgcolor').css("background-color", variableColor);
+    $('#title').css("color", variableColor);
+
+
+  }
+}
+
 var gameBoard = new Board();
 var timer = new Timer();
 var scoreboard = new Scoreboard();
@@ -352,6 +367,7 @@ $(function() {
     }
   })
   $("form").submit(function(event) {
+    $(".timer, .flags-remaining").show();
     event.preventDefault();
 
     $(".grid").removeClass("easyBorder mediumBorder hardBorder");
@@ -376,9 +392,5 @@ $(function() {
     gameBoard.setbombWarnings();
     gameBoard.updateUI();
     timer.startTimer();
-  });
-
-  $( "#bgcolor" ).on( "mouseover", function() {
-    $( this ).css( "background-color", "white" );
   });
 })
