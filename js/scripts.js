@@ -280,12 +280,33 @@ var gameBoard = new Board();
 var timer = new Timer();
 
 $(function() {
-  // var difficulty = [Math.floor(gridWidth * gridWidth * 0.1), Math.floor(gridWidth * gridWidth * 0.1), Math.floor(gridWidth * gridWidth * 0.1)]
+  var difficulty = 0.1;
+  $("#easy").toggleClass("clicked");
+  $("#easy").click(function() {
+    difficulty = 0.1;
+    $("#easy").addClass("clicked");
+    $("#medium").removeClass("clicked");
+    $("#hard").removeClass("clicked");
+  })
+  $("#medium").click(function() {
+    difficulty = 0.2;
+    $("#easy").removeClass("clicked");
+    $("#medium").addClass("clicked");
+    $("#hard").removeClass("clicked");
+  })
+  $("#hard").click(function() {
+    console.log("hard");
+    difficulty = 0.3;
+    $("#easy").removeClass("clicked");
+    $("#medium").removeClass("clicked");
+    $("#hard").addClass("clicked");
+  })
   $("form").submit(function(event) {
+    $(".timer").show();
     event.preventDefault();
     var gridWidth = parseInt($("#gridDimension").val());
     gameBoard.gridWidth = gridWidth;
-    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * 0.1);
+    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * difficulty);
     gameBoard.squaresRemaining = gridWidth*gridWidth;
     gameBoard.flagsRemaining = gameBoard.bombsRemaining;
     gameBoard.resetGrid();
@@ -295,10 +316,4 @@ $(function() {
     timer.startTimer();
   });
 
-  $("#flagButton").click(function() {
-      gameBoard.userFlagSelect = true;
-  })
-  $("#revealButton").click(function() {
-      gameBoard.userFlagSelect = false;
-  })
 })
