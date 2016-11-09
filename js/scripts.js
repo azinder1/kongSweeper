@@ -13,7 +13,7 @@ function Board() {
   this.gridWidth;
   this.gameOver = false;
   this.revealedSquares=[];
-  this.images = ["img/banana1.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrelCropped.png", "img/explosion.jpg", "img/questionMarkTransparent.png", "img/mineBlankRed.png"];
+  this.images = ["img/banana1.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrelCropped.png", "img/explosionRed.png", "img/questionMarkTransparent.png", "img/mineBlankRed.png"];
   this.userFlagSelect = false;
 }
 
@@ -252,9 +252,6 @@ Board.prototype.updateUI = function() {
       })
     }
   }
-  var heightofGrid = $('.grid').height();
-  console.log(heightofGrid);
-  $('.grid').css({'width':heightofGrid+'px'});
 }
 
 function Scoreboard() {
