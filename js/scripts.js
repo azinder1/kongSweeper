@@ -13,7 +13,7 @@ function Board() {
   this.gridWidth;
   this.gameOver = false;
   this.revealedSquares=[];
-  this.images = ["img/banana1Red.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrelCropped.png", "img/explosionRed.jpg", "img/questionMarkRed.png", "img/mineBlankRed.png"];
+  this.images = ["img/banana1.png","img/mine1.png","img/mine2.png","img/mine3.png","img/mine4.png","img/mine5.png","img/mine6.png","img/mine7.png","img/mine8.png","img/barrelCropped.png", "img/explosion.jpg", "img/questionMarkTransparent.png", "img/mineBlankRed.png"];
   this.userFlagSelect = false;
 }
 
@@ -75,7 +75,7 @@ Board.prototype.resetGrid = function() {
 Board.prototype.updateUI = function() {
   $(".grid").empty();
   for (row = 0; row < this.gridWidth; row++) {
-    $(".grid").append('<div class="row gridRow" id="row' + row.toString() + '"></div>');
+    $(".grid").append('<div class="row gridRow centerstuff" id="row' + row.toString() + '"></div>');
     for (column = 0; column < this.gridWidth; column++) {
       var squareCoordinateID = "#" + row.toString() + "-" + column.toString()
       $("#row" + row).append('<div class="gridColumn" id="' + row.toString() + "-"  + column.toString() + '">'+'<img oncontextmenu="return false;" class = "gridSquare" src="'+ gameBoard.images[12] + '" alt="square" /></div>');
@@ -123,6 +123,10 @@ Board.prototype.updateUI = function() {
       })
     }
   }
+  var heightofGrid = $('.grid').height();
+  $('.grid').css({'width':heightofGrid+'px'});
+  console.log("Grid Height: " + $('.grid').height());
+  console.log("Grid Width: " + $('.grid').width());
 }
 
 Board.prototype.placeFlag = function(squareObject) {
@@ -285,7 +289,7 @@ Board.prototype.changeColor = function() {
     var variableGreen = Math.round(5 * (1/ratio));
     var variableBlue =  Math.round(5 * (1/ratio));
     var variableColor = "rgb(" + variableRed + ", " + variableGreen + ", " + variableBlue + ")";
-    $('#bgcolor').css("background-color", variableColor);
+    $('.grid').css("background", "radial-gradient(" + variableColor + ", black");
     $('#title').css("color", variableColor);
 
 

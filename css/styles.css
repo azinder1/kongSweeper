@@ -35,9 +35,11 @@ html {
 .flags-remaining {
   display: none;
 }
- .grid {
-   margin-bottom:100px;
- }
+
+.grid {
+  width: 100%;
+  margin-bottom:100px;
+}
 .height_min {
   height: 30px;
 }
