@@ -1,6 +1,8 @@
 h1 {
   margin-bottom: 100px;
   text-align: center;
+  font-family: '8BITWONDERNominal';
+  font-size: 5em;
 }
 
 html {
@@ -13,6 +15,7 @@ html {
   background-color: rgba(255,255,255, 0.8);
   border-radius: 2%;
   size: contain;
+  min-width: 1150px;
 }
 .input {
   margin-bottom: 75px;
@@ -27,6 +30,9 @@ html {
   /*border-top: 3px solid black;*/
 }
 .timer {
+  display: none;
+}
+.flags-remaining {
   display: none;
 }
  .grid {
@@ -83,7 +89,7 @@ html {
 .easyBG {
   height: cover;
   width: 100%;
-  background-image: url(../img/easyBG.jpg);
+  background-image: url(../img/easyBG.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -94,7 +100,7 @@ html {
 }
 
 .mediumBorder {
-  
+
 }
 
 .mediumBG {
@@ -109,7 +115,7 @@ html {
 .hardBG {
   height: cover;
   width: 100%;
-  background-image: url(../img/hardBG.png);
+  background-image: url(../img/hardBG.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
