@@ -54,10 +54,16 @@ html {
   margin-top: 20px;
 }
 
+.gameOver {
+  display: none;
+  background-color: black;
+  height: 200px;
+  width: 500px;
+}
 .grid {
   width: 100%;
   margin-bottom:100px;
-  background-color: red;
+  background-color: black;
 }
 
 input {
@@ -175,3 +181,29 @@ button {
   background-color: maroon;
   border-radius: 10%;
 }
+
+/*Snowflakes*/
+.bananas {
+    top:0px;
+    left:0px;
+    position:absolute;
+    z-index:200;
+    width:50px;
+    height:50px;
+    animation:spin 4s linear;
+    animation-fill-mode: forwards;
+    /*margin-left: 40%;*/
+}
+
+@keyframes spin {
+0%  {-webkit-transform: rotate(0deg);}
+100% {-webkit-transform: rotate(360deg);}
+}
+
+/*#site {
+    width:500px;
+    height:500px;
+    margin:0 auto;
+    position:relative;
+    overflow:hidden;
+}*/
