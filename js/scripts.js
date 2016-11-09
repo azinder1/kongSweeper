@@ -85,7 +85,6 @@ Board.prototype.updateUI = function() {
         var clickedSquareObject = gameBoard.grid[squareCoordinateID[0]][squareCoordinateID[1]];
         switch (event.which) {
           case 1:
-          console.log("case 1");
           //if user is clearing mines
           if (!gameBoard.gameOver) {
             //game over
@@ -120,6 +119,7 @@ Board.prototype.updateUI = function() {
           default:
             break;
         }
+        gameBoard.changeColor();
       })
     }
   }
@@ -277,52 +277,16 @@ Timer.prototype.stopTimer = function() {
   clearInterval(this.gameTimer);
 }
 
-// var colorValues =
-//   [ "#0F0000",
-//     "#2B0303",
-//     "#440606",
-//     "#5E0505",
-//     "#7A0B0B",
-//     "#931313",
-//     "#AD1A1A",
-//     "#C92424"  ];
-//
-// var ratio = gameBoard.bombsRemaining / gameBoard.totalBombs ;
-// var chosenColor = colorValues[0];
-// switch(ratio.toFixed(1)) {
-//   case 0.1:
-//     console.log("case 0.1");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-//   case 0.2:
-//     console.log("case 0.2");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-//   case 0.3:
-//     console.log("case 0.3");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-//   case 0.4:
-//     console.log("case 0.4");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-//   case 0.5:
-//     console.log("case 0.5");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-//   case 0.6:
-//     console.log("case 0.6");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-//   case 0.7:
-//     console.log("case 0.7");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-//   case 0.8:
-//     console.log("case 0.8");
-//     $('bgcolor').css("background-color", chosenColor);
-//     break;
-// }
+Board.prototype.changeColor = function() {
+  var ratio = gameBoard.bombsRemaining / gameBoard.totalBombs ;
+  if (ratio > .2) {
+    var variableRed = Math.round(50 * (1/ratio));
+    var variableGreen = Math.round(5 * (1/ratio));
+    var variableBlue =  Math.round(5 * (1/ratio));
+    var variableColor = "rgb(" + variableRed + ", " + variableGreen + ", " + variableBlue + ")";
+    $('#bgcolor, .grid').css("background-color", variableColor);
+  }
+}
 
 var gameBoard = new Board();
 var timer = new Timer();
@@ -363,9 +327,5 @@ $(function() {
     gameBoard.setbombWarnings();
     gameBoard.updateUI();
     timer.startTimer();
-  });
-
-  $( "#bgcolor" ).on( "mouseover", function() {
-    $( this ).css( "background-color", "white" );
   });
 })
