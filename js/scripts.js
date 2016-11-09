@@ -7,6 +7,7 @@ function Board() {
   this.revealedSquares=[];
   this.placedFlags = [];
   this.bombsRemaining;
+  this.totalBombs;
   this.squaresRemaining;
   this.flagsRemaining;
   this.gridWidth;
@@ -276,6 +277,53 @@ Timer.prototype.stopTimer = function() {
   clearInterval(this.gameTimer);
 }
 
+// var colorValues =
+//   [ "#0F0000",
+//     "#2B0303",
+//     "#440606",
+//     "#5E0505",
+//     "#7A0B0B",
+//     "#931313",
+//     "#AD1A1A",
+//     "#C92424"  ];
+//
+// var ratio = gameBoard.bombsRemaining / gameBoard.totalBombs ;
+// var chosenColor = colorValues[0];
+// switch(ratio.toFixed(1)) {
+//   case 0.1:
+//     console.log("case 0.1");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+//   case 0.2:
+//     console.log("case 0.2");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+//   case 0.3:
+//     console.log("case 0.3");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+//   case 0.4:
+//     console.log("case 0.4");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+//   case 0.5:
+//     console.log("case 0.5");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+//   case 0.6:
+//     console.log("case 0.6");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+//   case 0.7:
+//     console.log("case 0.7");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+//   case 0.8:
+//     console.log("case 0.8");
+//     $('bgcolor').css("background-color", chosenColor);
+//     break;
+// }
+
 var gameBoard = new Board();
 var timer = new Timer();
 
@@ -306,8 +354,9 @@ $(function() {
     event.preventDefault();
     var gridWidth = parseInt($("#gridDimension").val());
     gameBoard.gridWidth = gridWidth;
-    gameBoard.bombsRemaining = Math.floor(gridWidth * gridWidth * difficulty);
     gameBoard.squaresRemaining = gridWidth*gridWidth;
+    gameBoard.bombsRemaining = Math.floor(gameBoard.squaresRemaining * difficulty);
+    gameBoard.totalBombs = gameBoard.bombsRemaining;
     gameBoard.flagsRemaining = gameBoard.bombsRemaining;
     gameBoard.resetGrid();
     gameBoard.placebombs();
@@ -316,4 +365,7 @@ $(function() {
     timer.startTimer();
   });
 
+  $( "#bgcolor" ).on( "mouseover", function() {
+    $( this ).css( "background-color", "white" );
+  });
 })
