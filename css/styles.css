@@ -8,7 +8,7 @@ html {
   width: 100%;
 }
 
-.container {
+.gameScreen {
   margin-top: 10%;
   background-color: rgba(255,255,255, 0.8);
   border-radius: 2%;
@@ -80,6 +80,20 @@ html {
   width: 15%;
 }
 
+.leaderboard {
+  margin-bottom: 100px;
+  margin-top: 20px;
+  padding: 50px;
+  background-color: rgba(0,0,0, 0.8);
+  border-radius: 2%;
+  size: contain;
+  color: white;
+}
+
+.leaderboard, .easyHighScore, .mediumHighScore, .hardHighScore {
+  display: none;
+}
+
 .easyBG {
   height: cover;
   width: 100%;
@@ -90,11 +104,7 @@ html {
 }
 
 .easyBorder {
-
-}
-
-.mediumBorder {
-  
+  border-color: green;
 }
 
 .mediumBG {
@@ -106,6 +116,10 @@ html {
   background-attachment: fixed;
 }
 
+.mediumBorder {
+  border-color: blue;
+}
+
 .hardBG {
   height: cover;
   width: 100%;
@@ -113,6 +127,10 @@ html {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+.hardBorder {
+  border-color: red;
 }
 
 .skill-button:hover {

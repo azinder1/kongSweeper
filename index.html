@@ -9,7 +9,7 @@
     <title>Kongsweeper</title>
   </head>
   <body class="easyBG">
-    <div class="container">
+    <div class="container gameScreen">
       <h1>Kongsweeper</h1>
       <div class="input">
         <form>
@@ -24,19 +24,30 @@
           <button class= "btn btn-danger" type="submit">Play!</button>
         </form>
       </div>
-        <div class="centerstuff text-center">
-          <div class="timer">
-            <label>Timer: <span id="timer"></span></label>
-          </div>
-          <div class="grid">
-          </div>
+      <div class="centerstuff text-center">
+        <div class="timer">
+          <label>Timer: <span id="timer"></span></label>
         </div>
-        <div class="leaderboard">
-          <span id="highscore"></span>
+        <div class="grid">
         </div>
-        <div id="bgcolor">
+      </div>
+        <!-- <div id="bgcolor">
           <span ></span>
+        </div> -->
+    </div>
+    <div class="container leaderboard">
+      <h2>Leaderboards:</h2>
+      <div class="row">
+        <div class="easyHighScore easyBorder col-md-4">
+          <h3 class="easyHighScore">Easy: </h3><span id="easyHighScore" class="easyHighScore"></span>
         </div>
+        <div class="mediumHighScore mediumBorder col-md-4">
+          <h3 class="mediumHighScore">Medium: </h3><span id="mediumHighScore" class="mediumHighScore"></span>
+        </div>
+        <div class="hardHighScore hardBorder col-md-4">
+          <h3 class="hardHighScore">Hard: </h3><span id="hardHighScore" class="hardHighScore"></span>
+        </div>
+      </div>
     </div>
   </body>
 </html>
