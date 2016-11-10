@@ -65,24 +65,19 @@ body {
   display: table;
   margin-left: auto;
   margin-right: auto;
-  /*border-top: 3px solid black;*/
 }
-.counters {
+
+.gameOverContainer {
   display: none;
-  margin-top: 20px;
 }
 
 .gameOver {
-  display: none;
+  margin-right: auto;
+  margin-left: auto;
   background-color: black;
   height: 200px;
   width: 500px;
   border-radius:5%;
-}
-
-#min_height {
-  height: 350px;
-  min-height: 350px;
 }
 
 #width_min {
@@ -93,6 +88,9 @@ body {
   width: 100%;
   margin-bottom:100px;
   background-color: black;
+}
+
+.gamePage {
   display: none;
 }
 
@@ -131,7 +129,6 @@ input {
   border: 1px solid black;
   height: 30px;
   width: 30px;
-  /*background-color:red;*/
 }
 
 .gridSquare{
@@ -146,29 +143,17 @@ input {
   background-color: black;
 }
 
-/*img {
-  display: none;
-}*/
-
-/*.gridRow {
-  float: left;
-  border: 1px solid green;
-}*/
-
 .coordinateHighlight {
   background-color: yellow;
 }
 
-/*.hasMine {
-	background-color: black;
-}*/
 .skill-button {
   width: 15%;
 }
 
 .easyHighScore, .mediumHighScore, .hardHighScore {
   display: none;
-  margin: 5px;
+  margin: 10px;
 }
 
 .easyBG {
@@ -180,7 +165,6 @@ input {
   background-attachment: fixed;
 }
 
-
 .mediumBG {
   height: cover;
   width: 100%;
@@ -188,10 +172,6 @@ input {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-}
-
-.mediumBorder {
-  border-color: blue;
 }
 
 .hardBG {
@@ -203,15 +183,9 @@ input {
   background-attachment: fixed;
 }
 
-.hardBorder {
-  border-color: red;
-}
-
 .skill-button:hover {
-  /*background-color: maroon;*/
   border: 5px solid white;
   border-radius: 10%;
-  /*opacity: 0.5;*/
 }
 
 button {
@@ -223,7 +197,6 @@ button {
   border-radius: 10%;
 }
 
-/*Snowflakes*/
 .bananas {
     top:0px;
     left:0px;
@@ -233,18 +206,9 @@ button {
     height:50px;
     animation:spin 4s linear;
     animation-fill-mode: forwards;
-    /*margin-left: 40%;*/
 }
 
 @keyframes spin {
 0%  {-webkit-transform: rotate(0deg);}
 100% {-webkit-transform: rotate(360deg);}
 }
-
-/*#site {
-    width:500px;
-    height:500px;
-    margin:0 auto;
-    position:relative;
-    overflow:hidden;
-}*/

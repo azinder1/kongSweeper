@@ -44,9 +44,9 @@ Board.prototype.checkForVictory = function() {
   if (this.squaresRemaining === this.bombsRemaining){
     this.gameOver = true;
     fallingBanana();
-    $(".gameSetup").hide();
-    $(".gameOver").show()
-    $("#gameOverCondition").text("You win!")
+    $(".gameOverContainer").show();
+    $(".input").delay(800).fadeToggle();
+    $("#gameOverCondition").text("You win!");
     var highscore = parseInt($('#timer').html());
     timer.stopTimer();
     this.revealAllBombs(true);
@@ -231,10 +231,9 @@ Board.prototype.updateUI = function() {
               gameBoard.gameOver = true;
               gameBoard.revealAllBombs(false);
               $(".grid").effect("shake", {direction: "up",times: 5, distance: 10});
-              $(".gameSetup").hide();
-              $(".gameOver").show();
+              $(".gameOverContainer").show();
+              $(".input").delay(800).fadeToggle();
               $("#gameOverCondition").text("You lose! \n")
-              console.log("game over");
               timer.stopTimer();
               //only check clicked square
               } else if (clickedSquareObject.value > 0) {
@@ -374,6 +373,7 @@ var scoreboard = new Scoreboard();
 
 $(function() {
   $("#easy").toggleClass("clicked");
+
   $("#easy").click(function() {
     if (gameBoard.gameOver) {
       scoreboard.difficulty = 0.1;
@@ -404,15 +404,16 @@ $(function() {
       $("body").addClass("hardBG");
     }
   })
+
   $(function() {
     $("#playAgain").click(function() {
-      $(".gameOver").hide();
-      $(".gameSetup").show();
+      $(".gameOverContainer").fadeToggle();
+      $(".gamePage").fadeToggle();
+      $(".gameSetup").delay(400).fadeToggle();
     })
   })
+
   $("form").submit(function(event) {
-    $(".grid").fadeToggle();
-    $(".counters").show();
     $("#bananaZone").empty();
     event.preventDefault();
 
@@ -428,8 +429,9 @@ $(function() {
     gameBoard.setbombWarnings();
     gameBoard.updateUI();
 
-    // var heightofGrid = $('.grid').height();
-    // $('.grid').css({'width':heightofGrid+'px'});
+    $(".gameSetup").fadeToggle();
+    $(".input").slideToggle();
+    $(".gamePage").delay(400).fadeToggle();
 
     timer.startTimer();
   });
