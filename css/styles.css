@@ -22,6 +22,7 @@ html {
 
 body {
   color: white;
+  background-color: black;
 }
 
 .btn {
@@ -42,6 +43,12 @@ body {
   .instructions, .leaderboard {
     height: 1000px;
   }
+}
+
+#flags-remaining, #timer {
+  font-family: monospace;
+  color: white;
+  font-size: 20px;
 }
 
 .gameScreen {
