@@ -395,7 +395,6 @@ $(function() {
     }
   })
   $("#hard").click(function() {
-    console.log("clicked");
     if (gameBoard.gameOver) {
       scoreboard.difficulty = 0.3;
       $("#easy").removeClass("clicked");
@@ -412,20 +411,10 @@ $(function() {
     })
   })
   $("form").submit(function(event) {
+    $(".grid").fadeToggle();
     $(".counters").show();
     $("#bananaZone").empty();
     event.preventDefault();
-
-    $(".grid").removeClass("easyBorder mediumBorder hardBorder");
-    // $(".timer").show();
-
-    if (scoreboard.difficulty === 0.1) {
-      $(".grid").addClass("easyBorder");
-    } else if (scoreboard.difficulty === 0.15) {
-      $(".grid").addClass("mediumBorder");
-    } else if (scoreboard.difficulty === 0.20) {
-      $(".grid").addClass("hardBorder");
-    }
 
     var gridWidth = parseInt($("#gridDimension").val());
     gameBoard.gameOver = true;
