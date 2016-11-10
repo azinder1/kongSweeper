@@ -20,20 +20,38 @@ html {
   width: 100%;
 }
 
+body {
+  color: white;
+}
+
+.btn {
+  background-color:maroon;
+  border-color: black;
+}
+
 .instructions, .leaderboard {
   margin-top:10%;
-  background-color: rgba(2,2,2, 0.6);
+  background-color: rgba(2,2,2, 0.8);
   border-radius: 20px;
   color: white;
-  height:500px;
+  height:650px;
+  font-family: monospace;
+}
+
+@@media (min-width: 1200) and (max-width: 1600) {
+  .instructions, .leaderboard {
+    height: 1000px;
+  }
 }
 
 .gameScreen {
   margin-top: 10%;
-  background-color: rgba(255,255,255, 0.6);
+  background-color: rgba(0,0,0, 0.6);
+  border-style: double;
+  border-color: black;
   border-radius: 2%;
   size: contain;
-  min-width: 930px;
+  min-width: 1000px;
   font-family: '8BITWONDERNominal';
 }
 
@@ -67,6 +85,10 @@ html {
   min-height: 350px;
 }
 
+#width_min {
+  min-width: 1500px;
+}
+
 .grid {
   width: 100%;
   margin-bottom:100px;
@@ -78,6 +100,7 @@ input {
   font-weight: bold;
   float: left;
   width: 100px;
+  color: black;
 }
 
 #playerName {
@@ -184,9 +207,10 @@ input {
 }
 
 .skill-button:hover {
-  background-color: maroon;
+  /*background-color: maroon;*/
+  border: 5px solid white;
   border-radius: 10%;
-  opacity: 0.5;
+  /*opacity: 0.5;*/
 }
 
 button {

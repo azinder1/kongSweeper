@@ -14,7 +14,7 @@
   <body class="easyBG">
     <div id="bananaZone"></div>
     <div class="container-fluid">
-      <div class="row">
+      <div id="width_min" class="row">
         <div class="col-lg-2 instructions">
           <h2>Instructions:</h2><br>
           The goal of KongSweeper is to uncover all the squares that don't contain TNT without being blown up.<br><br>
@@ -41,7 +41,7 @@
                     <label for="playerName">Enter your name:</label>
                   </div>
                   <div class="col-xs-6">
-                    <input type="text" id="playerName" value="Player" autocomplete="off"><br>
+                    <input type="text" id="playerName" value="Player" autocomplete="off" maxlength="10"><br>
                   </div>
                 </div>
                 <div class="gridWidth">
@@ -52,7 +52,7 @@
                     <input type="number" id="gridDimension" value="10" min="5" max="30">
                   </div>
                 </div>
-                <button class= "btn btn-danger" type="submit">Play!</button>
+                <button class= "btn btn-lg btn-danger" type="submit">Start!</button>
               </div>
               <div class="centerstuff text-center gameOver">
                 <p><span id="gameOverCondition"></span></p>

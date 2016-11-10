@@ -335,9 +335,6 @@ Board.prototype.changeColor = function() {
     var variableBlue =  Math.round(5 * (1/ratio));
     var variableColor = "rgb(" + variableRed + ", " + variableGreen + ", " + variableBlue + ")";
     $('.grid').css("background", "radial-gradient(" + variableColor + ", black");
-    $('#title').css("color", variableColor);
-
-
   }
 }
 
